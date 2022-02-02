@@ -8,7 +8,7 @@ import {
   FaLinkedin,
   FaInstagram,
   FaLink,
-  FaEnvelope,
+  FaEnvelope
 } from "react-icons/fa"
 
 import { siteUrl, description, author, links } from "../../../blog-config"
