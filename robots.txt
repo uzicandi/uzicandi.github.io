@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
-Sitemap: https://uzicandi.github.io/sitemap/sitemap-index.xml
+Sitemap: https://uzicandi.github.io/sitemap-index.xml
 Host: https://uzicandi.github.io
