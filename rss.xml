@@ -1,4 +1,511 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of ocean.dev]]></title><description><![CDATA[front-end developer]]></description><link>https://uzicandi.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Wed, 21 Aug 2024 21:16:58 GMT</lastBuildDate><item><title><![CDATA[38. 브라우저의 렌더링 과정]]></title><description><![CDATA[브라우저가 HTML, CSS, JS로 작성된 텍스트 문서를 어떻게 파싱(해석)하여 브라우저에 렌더링하는지 살펴보자 브라우저 렌더링 과정 브라우저는 HTML, CSS, JS…]]></description><link>https://uzicandi.github.io/deep-js-38/</link><guid isPermaLink="false">https://uzicandi.github.io/deep-js-38/</guid><pubDate>Sun, 04 Aug 2024 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;브라우저가 HTML, CSS, JS로 작성된 텍스트 문서를 어떻게 파싱(해석)하여 브라우저에 렌더링하는지 살펴보자&lt;/p&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[RSS Feed of ocean.dev]]></title><description><![CDATA[front-end developer]]></description><link>https://uzicandi.github.io</link><generator>GatsbyJS</generator><lastBuildDate>Thu, 22 Aug 2024 16:43:11 GMT</lastBuildDate><item><title><![CDATA[9. 타입 변환과 단축 평가(Type Coercion)]]></title><description><![CDATA[9.…]]></description><link>https://uzicandi.github.io/deep-js-9/</link><guid isPermaLink="false">https://uzicandi.github.io/deep-js-9/</guid><pubDate>Fri, 23 Aug 2024 00:00:00 GMT</pubDate><content:encoded>&lt;h3 id=&quot;91-타입-변환&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#91-%ED%83%80%EC%9E%85-%EB%B3%80%ED%99%98&quot; aria-label=&quot;91 타입 변환 permalink&quot; class=&quot;heading-anchor before&quot;&gt;&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;15&quot; height=&quot;15&quot; viewBox=&quot;0 0 24 24&quot;&gt;&lt;path d=&quot;M6.188 8.719c.439-.439.926-.801 1.444-1.087 2.887-1.591 6.589-.745 8.445 2.069l-2.246 2.245c-.644-1.469-2.243-2.305-3.834-1.949-.599.134-1.168.433-1.633.898l-4.304 4.306c-1.307 1.307-1.307 3.433 0 4.74 1.307 1.307 3.433 1.307 4.74 0l1.327-1.327c1.207.479 2.501.67 3.779.575l-2.929 2.929c-2.511 2.511-6.582 2.511-9.093 0s-2.511-6.582 0-9.093l4.304-4.306zm6.836-6.836l-2.929 2.929c1.277-.096 2.572.096 3.779.574l1.326-1.326c1.307-1.307 3.433-1.307 4.74 0 1.307 1.307 1.307 3.433 0 4.74l-4.305 4.305c-1.311 1.311-3.44 1.3-4.74 0-.303-.303-.564-.68-.727-1.051l-2.246 2.245c.236.358.481.667.796.982.812.812 1.846 1.417 3.036 1.704 1.542.371 3.194.166 4.613-.617.518-.286 1.005-.648 1.444-1.087l4.304-4.305c2.512-2.511 2.512-6.582.001-9.093-2.511-2.51-6.581-2.51-9.092 0z&quot;/&gt;&lt;/svg&gt;&lt;/a&gt;9.1 타입 변환&lt;/h3&gt;
+&lt;hr&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;명시적 타입변환(explicit coercion)&lt;/code&gt; 또는 &lt;code class=&quot;language-text&quot;&gt;타입 캐스팅(type casting)&lt;/code&gt;: 개발자가 의도적으로 값의 타입을 변환하는 것&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;암묵적 타입 변환(implicit coercion)&lt;/code&gt; 또는 &lt;code class=&quot;language-text&quot;&gt;타입 강제 변환(type coercion)&lt;/code&gt;: 개발자의 의도와는 상관없이 표현식을 평가하는 도중에 타입이 자동 변환&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;타입 변환이 기존 원시 값을 직접 변경하는 것은 아니다. 원시 값은 변경 불가능한 값(immutable value)이므로 변경할 수 없다.&lt;/li&gt;
+&lt;li&gt;타입 변환이란 기존 원시 값을 사용해 다른 타입의 새로운 원시 값을 생성하는 것이다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;92-암묵적-타입-변환&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#92-%EC%95%94%EB%AC%B5%EC%A0%81-%ED%83%80%EC%9E%85-%EB%B3%80%ED%99%98&quot; aria-label=&quot;92 암묵적 타입 변환 permalink&quot; class=&quot;heading-anchor before&quot;&gt;&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;15&quot; height=&quot;15&quot; viewBox=&quot;0 0 24 24&quot;&gt;&lt;path d=&quot;M6.188 8.719c.439-.439.926-.801 1.444-1.087 2.887-1.591 6.589-.745 8.445 2.069l-2.246 2.245c-.644-1.469-2.243-2.305-3.834-1.949-.599.134-1.168.433-1.633.898l-4.304 4.306c-1.307 1.307-1.307 3.433 0 4.74 1.307 1.307 3.433 1.307 4.74 0l1.327-1.327c1.207.479 2.501.67 3.779.575l-2.929 2.929c-2.511 2.511-6.582 2.511-9.093 0s-2.511-6.582 0-9.093l4.304-4.306zm6.836-6.836l-2.929 2.929c1.277-.096 2.572.096 3.779.574l1.326-1.326c1.307-1.307 3.433-1.307 4.74 0 1.307 1.307 1.307 3.433 0 4.74l-4.305 4.305c-1.311 1.311-3.44 1.3-4.74 0-.303-.303-.564-.68-.727-1.051l-2.246 2.245c.236.358.481.667.796.982.812.812 1.846 1.417 3.036 1.704 1.542.371 3.194.166 4.613-.617.518-.286 1.005-.648 1.444-1.087l4.304-4.305c2.512-2.511 2.512-6.582.001-9.093-2.511-2.51-6.581-2.51-9.092 0z&quot;/&gt;&lt;/svg&gt;&lt;/a&gt;9.2 암묵적 타입 변환&lt;/h3&gt;
+&lt;hr&gt;
+&lt;blockquote&gt;
+&lt;p&gt;자바스크립트 엔진이 표현식을 평가할 때 개발자의 의도와는 상관없이 코드의 문맥을 고려해 암묵적으로 데이터 타입을 강제 변환(암묵적 타입 변환)하는 것&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;암묵적 타입 변환이 발생하면 → &lt;code class=&quot;language-text&quot;&gt;문자열(string)&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;숫자(number)&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;불리언(boolean)&lt;/code&gt; 과 같은 &lt;code class=&quot;language-text&quot;&gt;원시 타입(primitive type)&lt;/code&gt; 중 하나로 타입을 자동 변환&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;문자열-타입으로-변환&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#%EB%AC%B8%EC%9E%90%EC%97%B4-%ED%83%80%EC%9E%85%EC%9C%BC%EB%A1%9C-%EB%B3%80%ED%99%98&quot; aria-label=&quot;문자열 타입으로 변환 permalink&quot; class=&quot;heading-anchor before&quot;&gt;&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;15&quot; height=&quot;15&quot; viewBox=&quot;0 0 24 24&quot;&gt;&lt;path d=&quot;M6.188 8.719c.439-.439.926-.801 1.444-1.087 2.887-1.591 6.589-.745 8.445 2.069l-2.246 2.245c-.644-1.469-2.243-2.305-3.834-1.949-.599.134-1.168.433-1.633.898l-4.304 4.306c-1.307 1.307-1.307 3.433 0 4.74 1.307 1.307 3.433 1.307 4.74 0l1.327-1.327c1.207.479 2.501.67 3.779.575l-2.929 2.929c-2.511 2.511-6.582 2.511-9.093 0s-2.511-6.582 0-9.093l4.304-4.306zm6.836-6.836l-2.929 2.929c1.277-.096 2.572.096 3.779.574l1.326-1.326c1.307-1.307 3.433-1.307 4.74 0 1.307 1.307 1.307 3.433 0 4.74l-4.305 4.305c-1.311 1.311-3.44 1.3-4.74 0-.303-.303-.564-.68-.727-1.051l-2.246 2.245c.236.358.481.667.796.982.812.812 1.846 1.417 3.036 1.704 1.542.371 3.194.166 4.613-.617.518-.286 1.005-.648 1.444-1.087l4.304-4.305c2.512-2.511 2.512-6.582.001-9.093-2.511-2.51-6.581-2.51-9.092 0z&quot;/&gt;&lt;/svg&gt;&lt;/a&gt;문자열 타입으로 변환&lt;/h3&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;// 🎯 주의할 것 중심
+
+// 숫자 타입
+NaN + &apos;&apos;;             // &quot;NaN&quot;
+Infinity + &apos;&apos;         // &quot;Infinity&quot;
+
+// null 타입
+null + &apos;&apos;;            // &quot;null&quot;
+
+// undefined 타입
+undefined + &apos;&apos;;       // &quot;undefined&quot;
+
+// 심벌 타입
+(Symbol()) + &apos;&apos;;      // TypeError: Cannot convert a Symbol value to a string
+
+// 객체 타입
+({}) + &apos;&apos;;            // &quot;[object Object]&quot;
+Math + &apos;&apos;;            // &quot;[object Math]&quot;
+[] + &apos;&apos;;              // &quot;&quot;
+[10, 20] + &apos;&apos;;        // &quot;10,20&quot;
+(function(){}_ + &apos;&apos;;  // &quot;function(){}&quot;
+Array + &apos;&apos;;           // &quot;function Array() { [native code] }&quot;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;숫자-타입으로-변환&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#%EC%88%AB%EC%9E%90-%ED%83%80%EC%9E%85%EC%9C%BC%EB%A1%9C-%EB%B3%80%ED%99%98&quot; aria-label=&quot;숫자 타입으로 변환 permalink&quot; class=&quot;heading-anchor before&quot;&gt;&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;15&quot; height=&quot;15&quot; viewBox=&quot;0 0 24 24&quot;&gt;&lt;path d=&quot;M6.188 8.719c.439-.439.926-.801 1.444-1.087 2.887-1.591 6.589-.745 8.445 2.069l-2.246 2.245c-.644-1.469-2.243-2.305-3.834-1.949-.599.134-1.168.433-1.633.898l-4.304 4.306c-1.307 1.307-1.307 3.433 0 4.74 1.307 1.307 3.433 1.307 4.74 0l1.327-1.327c1.207.479 2.501.67 3.779.575l-2.929 2.929c-2.511 2.511-6.582 2.511-9.093 0s-2.511-6.582 0-9.093l4.304-4.306zm6.836-6.836l-2.929 2.929c1.277-.096 2.572.096 3.779.574l1.326-1.326c1.307-1.307 3.433-1.307 4.74 0 1.307 1.307 1.307 3.433 0 4.74l-4.305 4.305c-1.311 1.311-3.44 1.3-4.74 0-.303-.303-.564-.68-.727-1.051l-2.246 2.245c.236.358.481.667.796.982.812.812 1.846 1.417 3.036 1.704 1.542.371 3.194.166 4.613-.617.518-.286 1.005-.648 1.444-1.087l4.304-4.305c2.512-2.511 2.512-6.582.001-9.093-2.511-2.51-6.581-2.51-9.092 0z&quot;/&gt;&lt;/svg&gt;&lt;/a&gt;숫자 타입으로 변환&lt;/h3&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;// 문자열 타입
++&quot;&quot;; // 0
++&quot;0&quot;; // 0
++&quot;1&quot;; // 1
++&quot;string&quot; + // NaN
+  // 불리언 타입
+  true; // 1
++false; // 0
+
+// null 타입
++null; // 0
+
+// undefined 타입
++undefined; // NaN
+
+// 심벌 타입
++Symbol(); // TypeError: Cannot convert a Symbol value to a number
+
+// 객체 타입
++{}; // NaN
++[]; // 0
++[10, 20]; // NaN
++function () {}; // NaN&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;빈 문자열(&apos;&apos;), 빈 배열([]), null, false → 0&lt;/li&gt;
+&lt;li&gt;true → 1&lt;/li&gt;
+&lt;li&gt;객체, 빈 배열이 아닌 배열(= 값이 있는 배열), undefined → NaN ( 주의 ! )&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;불리언-타입으로-변환&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#%EB%B6%88%EB%A6%AC%EC%96%B8-%ED%83%80%EC%9E%85%EC%9C%BC%EB%A1%9C-%EB%B3%80%ED%99%98&quot; aria-label=&quot;불리언 타입으로 변환 permalink&quot; class=&quot;heading-anchor before&quot;&gt;&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;15&quot; height=&quot;15&quot; viewBox=&quot;0 0 24 24&quot;&gt;&lt;path d=&quot;M6.188 8.719c.439-.439.926-.801 1.444-1.087 2.887-1.591 6.589-.745 8.445 2.069l-2.246 2.245c-.644-1.469-2.243-2.305-3.834-1.949-.599.134-1.168.433-1.633.898l-4.304 4.306c-1.307 1.307-1.307 3.433 0 4.74 1.307 1.307 3.433 1.307 4.74 0l1.327-1.327c1.207.479 2.501.67 3.779.575l-2.929 2.929c-2.511 2.511-6.582 2.511-9.093 0s-2.511-6.582 0-9.093l4.304-4.306zm6.836-6.836l-2.929 2.929c1.277-.096 2.572.096 3.779.574l1.326-1.326c1.307-1.307 3.433-1.307 4.74 0 1.307 1.307 1.307 3.433 0 4.74l-4.305 4.305c-1.311 1.311-3.44 1.3-4.74 0-.303-.303-.564-.68-.727-1.051l-2.246 2.245c.236.358.481.667.796.982.812.812 1.846 1.417 3.036 1.704 1.542.371 3.194.166 4.613-.617.518-.286 1.005-.648 1.444-1.087l4.304-4.305c2.512-2.511 2.512-6.582.001-9.093-2.511-2.51-6.581-2.51-9.092 0z&quot;/&gt;&lt;/svg&gt;&lt;/a&gt;불리언 타입으로 변환&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;자바스크립트 엔진은 불리언 타입이 아닌 값을 &lt;code class=&quot;language-text&quot;&gt;Truthy 값(참으로 평가되는 값)&lt;/code&gt; or &lt;code class=&quot;language-text&quot;&gt;Falsy 값(거짓으로 평가되는 값)&lt;/code&gt; 으로 구분한다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;// 💡 자바스크립트 엔진이 Falsy 값으로 판단하는 값
+
++ false
++ undefined
++ null
++ 0, -0
++ NaN
++ &apos;&apos;(빈 문자열)&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;Falsy&lt;/code&gt; 값 을 제외한 모든 값은 &lt;code class=&quot;language-text&quot;&gt;Truthy&lt;/code&gt; 값&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;93-명시적-타입-변환&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#93-%EB%AA%85%EC%8B%9C%EC%A0%81-%ED%83%80%EC%9E%85-%EB%B3%80%ED%99%98&quot; aria-label=&quot;93 명시적 타입 변환 permalink&quot; class=&quot;heading-anchor before&quot;&gt;&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;15&quot; height=&quot;15&quot; viewBox=&quot;0 0 24 24&quot;&gt;&lt;path d=&quot;M6.188 8.719c.439-.439.926-.801 1.444-1.087 2.887-1.591 6.589-.745 8.445 2.069l-2.246 2.245c-.644-1.469-2.243-2.305-3.834-1.949-.599.134-1.168.433-1.633.898l-4.304 4.306c-1.307 1.307-1.307 3.433 0 4.74 1.307 1.307 3.433 1.307 4.74 0l1.327-1.327c1.207.479 2.501.67 3.779.575l-2.929 2.929c-2.511 2.511-6.582 2.511-9.093 0s-2.511-6.582 0-9.093l4.304-4.306zm6.836-6.836l-2.929 2.929c1.277-.096 2.572.096 3.779.574l1.326-1.326c1.307-1.307 3.433-1.307 4.74 0 1.307 1.307 1.307 3.433 0 4.74l-4.305 4.305c-1.311 1.311-3.44 1.3-4.74 0-.303-.303-.564-.68-.727-1.051l-2.246 2.245c.236.358.481.667.796.982.812.812 1.846 1.417 3.036 1.704 1.542.371 3.194.166 4.613-.617.518-.286 1.005-.648 1.444-1.087l4.304-4.305c2.512-2.511 2.512-6.582.001-9.093-2.511-2.51-6.581-2.51-9.092 0z&quot;/&gt;&lt;/svg&gt;&lt;/a&gt;9.3 명시적 타입 변환&lt;/h3&gt;
+&lt;hr&gt;
+&lt;p&gt;개발자의 의도에 따라 명시적으로 타입을 변경하는 방법&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;표준 빌트인 생성자 함수(String, Number, Boolean)&lt;/code&gt;을 &lt;code class=&quot;language-text&quot;&gt;new 연산자 없이 호출하는 방법&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;빌트인 메서드&lt;/code&gt;를 사용하는 방법&lt;/li&gt;
+&lt;li&gt;암묵적 타입 변환&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;문자열-타입으로-변환-1&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#%EB%AC%B8%EC%9E%90%EC%97%B4-%ED%83%80%EC%9E%85%EC%9C%BC%EB%A1%9C-%EB%B3%80%ED%99%98-1&quot; aria-label=&quot;문자열 타입으로 변환 1 permalink&quot; class=&quot;heading-anchor before&quot;&gt;&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;15&quot; height=&quot;15&quot; viewBox=&quot;0 0 24 24&quot;&gt;&lt;path d=&quot;M6.188 8.719c.439-.439.926-.801 1.444-1.087 2.887-1.591 6.589-.745 8.445 2.069l-2.246 2.245c-.644-1.469-2.243-2.305-3.834-1.949-.599.134-1.168.433-1.633.898l-4.304 4.306c-1.307 1.307-1.307 3.433 0 4.74 1.307 1.307 3.433 1.307 4.74 0l1.327-1.327c1.207.479 2.501.67 3.779.575l-2.929 2.929c-2.511 2.511-6.582 2.511-9.093 0s-2.511-6.582 0-9.093l4.304-4.306zm6.836-6.836l-2.929 2.929c1.277-.096 2.572.096 3.779.574l1.326-1.326c1.307-1.307 3.433-1.307 4.74 0 1.307 1.307 1.307 3.433 0 4.74l-4.305 4.305c-1.311 1.311-3.44 1.3-4.74 0-.303-.303-.564-.68-.727-1.051l-2.246 2.245c.236.358.481.667.796.982.812.812 1.846 1.417 3.036 1.704 1.542.371 3.194.166 4.613-.617.518-.286 1.005-.648 1.444-1.087l4.304-4.305c2.512-2.511 2.512-6.582.001-9.093-2.511-2.51-6.581-2.51-9.092 0z&quot;/&gt;&lt;/svg&gt;&lt;/a&gt;문자열 타입으로 변환&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;String&lt;/code&gt; 생성자 함수를 &lt;code class=&quot;language-text&quot;&gt;new 연산자&lt;/code&gt; 없이 호출하는 방법&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;String(1); // &quot;1&quot;
+String(true) // &quot;true&quot;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ol start=&quot;2&quot;&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;Object.prototype.toString&lt;/code&gt; 메서드를 사용하는 방법&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;(Infinity).toString() // &quot;Infinity&quot;
+(true).toString();&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ol start=&quot;3&quot;&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;문자열 연결 연산자&lt;/code&gt;를 이용하는 방법&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;NaN + &apos;&apos;; // &quot;NaN&quot;
+Infinity + &apos;&apos;; // &quot;Infinity&quot;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;숫자-타입으로-변환-1&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#%EC%88%AB%EC%9E%90-%ED%83%80%EC%9E%85%EC%9C%BC%EB%A1%9C-%EB%B3%80%ED%99%98-1&quot; aria-label=&quot;숫자 타입으로 변환 1 permalink&quot; class=&quot;heading-anchor before&quot;&gt;&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;15&quot; height=&quot;15&quot; viewBox=&quot;0 0 24 24&quot;&gt;&lt;path d=&quot;M6.188 8.719c.439-.439.926-.801 1.444-1.087 2.887-1.591 6.589-.745 8.445 2.069l-2.246 2.245c-.644-1.469-2.243-2.305-3.834-1.949-.599.134-1.168.433-1.633.898l-4.304 4.306c-1.307 1.307-1.307 3.433 0 4.74 1.307 1.307 3.433 1.307 4.74 0l1.327-1.327c1.207.479 2.501.67 3.779.575l-2.929 2.929c-2.511 2.511-6.582 2.511-9.093 0s-2.511-6.582 0-9.093l4.304-4.306zm6.836-6.836l-2.929 2.929c1.277-.096 2.572.096 3.779.574l1.326-1.326c1.307-1.307 3.433-1.307 4.74 0 1.307 1.307 1.307 3.433 0 4.74l-4.305 4.305c-1.311 1.311-3.44 1.3-4.74 0-.303-.303-.564-.68-.727-1.051l-2.246 2.245c.236.358.481.667.796.982.812.812 1.846 1.417 3.036 1.704 1.542.371 3.194.166 4.613-.617.518-.286 1.005-.648 1.444-1.087l4.304-4.305c2.512-2.511 2.512-6.582.001-9.093-2.511-2.51-6.581-2.51-9.092 0z&quot;/&gt;&lt;/svg&gt;&lt;/a&gt;숫자 타입으로 변환&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;Number&lt;/code&gt; 생성자 함수를 &lt;code class=&quot;language-text&quot;&gt;new&lt;/code&gt; 연산자 없이 호출하는 방법&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;Number(&apos;0&apos;); // 0
+Number(true); // 1
+Number(false) // 0&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ol start=&quot;2&quot;&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;parseInt&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;parseFloat&lt;/code&gt; 함수를 사용하는 방법(&lt;strong&gt;문자열만&lt;/strong&gt; 숫자 타입으로 변환 가능)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;parseInt(&apos;0&apos;); // 0&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ol start=&quot;3&quot;&gt;
+&lt;li&gt;단항 산술 연산자를 이용하는 방법&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;+ &apos;0&apos;;  // 0
++ true  // 1&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ol start=&quot;4&quot;&gt;
+&lt;li&gt;산술 연산자를 이용하는 방법&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;&apos;0&apos; + 1; // 0
+true + 1; // 1&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;불리언-타입으로-변환-1&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#%EB%B6%88%EB%A6%AC%EC%96%B8-%ED%83%80%EC%9E%85%EC%9C%BC%EB%A1%9C-%EB%B3%80%ED%99%98-1&quot; aria-label=&quot;불리언 타입으로 변환 1 permalink&quot; class=&quot;heading-anchor before&quot;&gt;&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;15&quot; height=&quot;15&quot; viewBox=&quot;0 0 24 24&quot;&gt;&lt;path d=&quot;M6.188 8.719c.439-.439.926-.801 1.444-1.087 2.887-1.591 6.589-.745 8.445 2.069l-2.246 2.245c-.644-1.469-2.243-2.305-3.834-1.949-.599.134-1.168.433-1.633.898l-4.304 4.306c-1.307 1.307-1.307 3.433 0 4.74 1.307 1.307 3.433 1.307 4.74 0l1.327-1.327c1.207.479 2.501.67 3.779.575l-2.929 2.929c-2.511 2.511-6.582 2.511-9.093 0s-2.511-6.582 0-9.093l4.304-4.306zm6.836-6.836l-2.929 2.929c1.277-.096 2.572.096 3.779.574l1.326-1.326c1.307-1.307 3.433-1.307 4.74 0 1.307 1.307 1.307 3.433 0 4.74l-4.305 4.305c-1.311 1.311-3.44 1.3-4.74 0-.303-.303-.564-.68-.727-1.051l-2.246 2.245c.236.358.481.667.796.982.812.812 1.846 1.417 3.036 1.704 1.542.371 3.194.166 4.613-.617.518-.286 1.005-.648 1.444-1.087l4.304-4.305c2.512-2.511 2.512-6.582.001-9.093-2.511-2.51-6.581-2.51-9.092 0z&quot;/&gt;&lt;/svg&gt;&lt;/a&gt;불리언 타입으로 변환&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;Boolean 생성자 함수를 new 연산자 없이 호출하는 방법&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;// 문자열 타입
+Boolean(&apos;x&apos;); // true
+Boolean(&apos;&apos;); // false
+
+// 숫자 타입
+Boolean(0); // false
+Boolean(NaN); // false
+Boolean(Infinity); // true
+
+// null 타입
+Boolean(null);  // false
+
+// undefined 타입
+Boolean(undefined);  // false
+
+// 객체 타입
+Boolean({});   // true
+Boolean([]);   // true&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ol start=&quot;2&quot;&gt;
+&lt;li&gt;! 부정 논리 연산자를 두 번 사용하는 방법&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;!!&apos;x&apos;   // true
+!!&apos;&apos;    // false
+!!0;    // false
+!!1;    // true&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;94-단축-평가&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#94-%EB%8B%A8%EC%B6%95-%ED%8F%89%EA%B0%80&quot; aria-label=&quot;94 단축 평가 permalink&quot; class=&quot;heading-anchor before&quot;&gt;&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;15&quot; height=&quot;15&quot; viewBox=&quot;0 0 24 24&quot;&gt;&lt;path d=&quot;M6.188 8.719c.439-.439.926-.801 1.444-1.087 2.887-1.591 6.589-.745 8.445 2.069l-2.246 2.245c-.644-1.469-2.243-2.305-3.834-1.949-.599.134-1.168.433-1.633.898l-4.304 4.306c-1.307 1.307-1.307 3.433 0 4.74 1.307 1.307 3.433 1.307 4.74 0l1.327-1.327c1.207.479 2.501.67 3.779.575l-2.929 2.929c-2.511 2.511-6.582 2.511-9.093 0s-2.511-6.582 0-9.093l4.304-4.306zm6.836-6.836l-2.929 2.929c1.277-.096 2.572.096 3.779.574l1.326-1.326c1.307-1.307 3.433-1.307 4.74 0 1.307 1.307 1.307 3.433 0 4.74l-4.305 4.305c-1.311 1.311-3.44 1.3-4.74 0-.303-.303-.564-.68-.727-1.051l-2.246 2.245c.236.358.481.667.796.982.812.812 1.846 1.417 3.036 1.704 1.542.371 3.194.166 4.613-.617.518-.286 1.005-.648 1.444-1.087l4.304-4.305c2.512-2.511 2.512-6.582.001-9.093-2.511-2.51-6.581-2.51-9.092 0z&quot;/&gt;&lt;/svg&gt;&lt;/a&gt;9.4 단축 평가&lt;/h3&gt;
+&lt;hr&gt;
+&lt;h3 id=&quot;논리-연산자를-이용한-단축평가&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#%EB%85%BC%EB%A6%AC-%EC%97%B0%EC%82%B0%EC%9E%90%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%9C-%EB%8B%A8%EC%B6%95%ED%8F%89%EA%B0%80&quot; aria-label=&quot;논리 연산자를 이용한 단축평가 permalink&quot; class=&quot;heading-anchor before&quot;&gt;&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;15&quot; height=&quot;15&quot; viewBox=&quot;0 0 24 24&quot;&gt;&lt;path d=&quot;M6.188 8.719c.439-.439.926-.801 1.444-1.087 2.887-1.591 6.589-.745 8.445 2.069l-2.246 2.245c-.644-1.469-2.243-2.305-3.834-1.949-.599.134-1.168.433-1.633.898l-4.304 4.306c-1.307 1.307-1.307 3.433 0 4.74 1.307 1.307 3.433 1.307 4.74 0l1.327-1.327c1.207.479 2.501.67 3.779.575l-2.929 2.929c-2.511 2.511-6.582 2.511-9.093 0s-2.511-6.582 0-9.093l4.304-4.306zm6.836-6.836l-2.929 2.929c1.277-.096 2.572.096 3.779.574l1.326-1.326c1.307-1.307 3.433-1.307 4.74 0 1.307 1.307 1.307 3.433 0 4.74l-4.305 4.305c-1.311 1.311-3.44 1.3-4.74 0-.303-.303-.564-.68-.727-1.051l-2.246 2.245c.236.358.481.667.796.982.812.812 1.846 1.417 3.036 1.704 1.542.371 3.194.166 4.613-.617.518-.286 1.005-.648 1.444-1.087l4.304-4.305c2.512-2.511 2.512-6.582.001-9.093-2.511-2.51-6.581-2.51-9.092 0z&quot;/&gt;&lt;/svg&gt;&lt;/a&gt;논리 연산자를 이용한 단축평가&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;논리곱(&amp;#x26;&amp;#x26;) = 논리 연산의 결과를 결정하는 것은 두 번째 피연산자&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;&apos;Cat&apos; &amp;amp;&amp;amp; &apos;Dog&apos; // &apos;Dog&apos;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;blockquote&gt;
+&lt;p&gt;논리합(||) = 논리 연산의 결과를 결정하는 것은 첫 번째 피연산자&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;&apos;Cat&apos; &amp;amp;&amp;amp; &apos;Dog&apos; // &apos;Cat&apos;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;| 단축 평가 표현식  | 평가 결과 |
+| ----------------- | -------- |
+| true  || anything | true     |
+| false || anything | anything |
+| true &amp;amp;&amp;amp; anything  | anything |
+| false &amp;amp;&amp;amp; anything | false    |&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;💡 &lt;strong&gt;단축 평가를 사용하면 if문을 대체할 수 있다.&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;어떤 조건이 Truthy 값(참으로 평가되는 값)일때 무언가를 해야한다면 논리곱(&amp;#x26;&amp;#x26;) 연산자 표현식으로 if문을 대체한다&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;var done = true;
+var message = &quot;&quot;;
+
+// 💩 조건문으로 값 할당
+if (done) message = &quot;값&quot;;
+
+// 👍 논리 연산자(논리곱)으로 값 할당
+message = done &amp;amp;&amp;amp; &quot;값&quot;;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;반대로 조건이 Falsy값일 때 무언가를 해야 한다면 논리합(||) 연산자 표현식으로 if문을 대체한다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;// 💩 조건문으로 값 할당
+if (!done) message = &quot;값&quot;;
+
+// 👍 논리 연산자(논리합)으로 값 할당
+message = done || &quot;값&quot;;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;객체를-가리키기를-기대하는-변수가-null-또는-undefined-가-아닌지-확인하고-프로퍼티를-참조할-때&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#%EA%B0%9D%EC%B2%B4%EB%A5%BC-%EA%B0%80%EB%A6%AC%ED%82%A4%EA%B8%B0%EB%A5%BC-%EA%B8%B0%EB%8C%80%ED%95%98%EB%8A%94-%EB%B3%80%EC%88%98%EA%B0%80-null-%EB%98%90%EB%8A%94-undefined-%EA%B0%80-%EC%95%84%EB%8B%8C%EC%A7%80-%ED%99%95%EC%9D%B8%ED%95%98%EA%B3%A0-%ED%94%84%EB%A1%9C%ED%8D%BC%ED%8B%B0%EB%A5%BC-%EC%B0%B8%EC%A1%B0%ED%95%A0-%EB%95%8C&quot; aria-label=&quot;객체를 가리키기를 기대하는 변수가 null 또는 undefined 가 아닌지 확인하고 프로퍼티를 참조할 때 permalink&quot; class=&quot;heading-anchor before&quot;&gt;&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;15&quot; height=&quot;15&quot; viewBox=&quot;0 0 24 24&quot;&gt;&lt;path d=&quot;M6.188 8.719c.439-.439.926-.801 1.444-1.087 2.887-1.591 6.589-.745 8.445 2.069l-2.246 2.245c-.644-1.469-2.243-2.305-3.834-1.949-.599.134-1.168.433-1.633.898l-4.304 4.306c-1.307 1.307-1.307 3.433 0 4.74 1.307 1.307 3.433 1.307 4.74 0l1.327-1.327c1.207.479 2.501.67 3.779.575l-2.929 2.929c-2.511 2.511-6.582 2.511-9.093 0s-2.511-6.582 0-9.093l4.304-4.306zm6.836-6.836l-2.929 2.929c1.277-.096 2.572.096 3.779.574l1.326-1.326c1.307-1.307 3.433-1.307 4.74 0 1.307 1.307 1.307 3.433 0 4.74l-4.305 4.305c-1.311 1.311-3.44 1.3-4.74 0-.303-.303-.564-.68-.727-1.051l-2.246 2.245c.236.358.481.667.796.982.812.812 1.846 1.417 3.036 1.704 1.542.371 3.194.166 4.613-.617.518-.286 1.005-.648 1.444-1.087l4.304-4.305c2.512-2.511 2.512-6.582.001-9.093-2.511-2.51-6.581-2.51-9.092 0z&quot;/&gt;&lt;/svg&gt;&lt;/a&gt;&quot;객체&quot;를 가리키기를 기대하는 변수가 null 또는 undefined 가 아닌지 확인하고 프로퍼티를 참조할 때&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;객체는 key와 value로 구성된 프로퍼티(property)의 집합이다.&lt;/li&gt;
+&lt;li&gt;만약 객체를 가리키기를 기대하는 변수의 값이 객체가 아니라 null 또는 undefined인 경우 객체의 프로퍼티를 참조하면 타입 에러가 발생한다.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;이 때 단축평가를 사용하면 에러를 발생시키지 않는다.&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;// 💩
+var elem = null;
+var value = elem.value; // TypeError: Cannot read property &apos;value&apos; of null
+
+// 👍
+// elem이 null 또는 undefined 같은 &quot;Falsy 값&quot;이면 elem 값으로 평가
+// elem이 &quot;Truthy 값&quot;이면 elem.value 로 평가
+var elem = null;
+var elem = elem &amp;amp;&amp;amp; elem.value; // null&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;함수-매개변수에-기본값을-설정할-때&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#%ED%95%A8%EC%88%98-%EB%A7%A4%EA%B0%9C%EB%B3%80%EC%88%98%EC%97%90-%EA%B8%B0%EB%B3%B8%EA%B0%92%EC%9D%84-%EC%84%A4%EC%A0%95%ED%95%A0-%EB%95%8C&quot; aria-label=&quot;함수 매개변수에 기본값을 설정할 때 permalink&quot; class=&quot;heading-anchor before&quot;&gt;&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;15&quot; height=&quot;15&quot; viewBox=&quot;0 0 24 24&quot;&gt;&lt;path d=&quot;M6.188 8.719c.439-.439.926-.801 1.444-1.087 2.887-1.591 6.589-.745 8.445 2.069l-2.246 2.245c-.644-1.469-2.243-2.305-3.834-1.949-.599.134-1.168.433-1.633.898l-4.304 4.306c-1.307 1.307-1.307 3.433 0 4.74 1.307 1.307 3.433 1.307 4.74 0l1.327-1.327c1.207.479 2.501.67 3.779.575l-2.929 2.929c-2.511 2.511-6.582 2.511-9.093 0s-2.511-6.582 0-9.093l4.304-4.306zm6.836-6.836l-2.929 2.929c1.277-.096 2.572.096 3.779.574l1.326-1.326c1.307-1.307 3.433-1.307 4.74 0 1.307 1.307 1.307 3.433 0 4.74l-4.305 4.305c-1.311 1.311-3.44 1.3-4.74 0-.303-.303-.564-.68-.727-1.051l-2.246 2.245c.236.358.481.667.796.982.812.812 1.846 1.417 3.036 1.704 1.542.371 3.194.166 4.613-.617.518-.286 1.005-.648 1.444-1.087l4.304-4.305c2.512-2.511 2.512-6.582.001-9.093-2.511-2.51-6.581-2.51-9.092 0z&quot;/&gt;&lt;/svg&gt;&lt;/a&gt;함수 매개변수에 기본값을 설정할 때&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;함수를 호출할 때 인수를 전달하지 않으면 매개변수에는 undefined가 할당된다&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;단축 평가를 사용해 매개변수의 기본값을 설정하면 undefined로 인해 발생할 수 있는 에러를 방지할 수 있다.&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;// 💩 인수를 전달하지 않을 경우
+function getStringLength(str) {
+  return str.length;
+}
+getStringLength(); // TypeError: Cannot read property &apos;length&apos; of undefined
+
+// 👍 단축 평가를 사용한 매개변수의 기본값 설정
+function getStringLength(str) {
+  str = str || &quot;&quot;;
+  return str.length;
+}
+getStringLength(); // 0
+
+// 👍 Es6의 매개변수 default parameter 설정
+function getStringLength(str = &quot;&quot;) {
+  return str.length;
+}
+getStringLength(); // 0&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;옵셔널-체이닝-연산자-&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#%EC%98%B5%EC%85%94%EB%84%90-%EC%B2%B4%EC%9D%B4%EB%8B%9D-%EC%97%B0%EC%82%B0%EC%9E%90-&quot; aria-label=&quot;옵셔널 체이닝 연산자  permalink&quot; class=&quot;heading-anchor before&quot;&gt;&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;15&quot; height=&quot;15&quot; viewBox=&quot;0 0 24 24&quot;&gt;&lt;path d=&quot;M6.188 8.719c.439-.439.926-.801 1.444-1.087 2.887-1.591 6.589-.745 8.445 2.069l-2.246 2.245c-.644-1.469-2.243-2.305-3.834-1.949-.599.134-1.168.433-1.633.898l-4.304 4.306c-1.307 1.307-1.307 3.433 0 4.74 1.307 1.307 3.433 1.307 4.74 0l1.327-1.327c1.207.479 2.501.67 3.779.575l-2.929 2.929c-2.511 2.511-6.582 2.511-9.093 0s-2.511-6.582 0-9.093l4.304-4.306zm6.836-6.836l-2.929 2.929c1.277-.096 2.572.096 3.779.574l1.326-1.326c1.307-1.307 3.433-1.307 4.74 0 1.307 1.307 1.307 3.433 0 4.74l-4.305 4.305c-1.311 1.311-3.44 1.3-4.74 0-.303-.303-.564-.68-.727-1.051l-2.246 2.245c.236.358.481.667.796.982.812.812 1.846 1.417 3.036 1.704 1.542.371 3.194.166 4.613-.617.518-.286 1.005-.648 1.444-1.087l4.304-4.305c2.512-2.511 2.512-6.582.001-9.093-2.511-2.51-6.581-2.51-9.092 0z&quot;/&gt;&lt;/svg&gt;&lt;/a&gt;옵셔널 체이닝 연산자 &lt;code class=&quot;language-text&quot;&gt;?.&lt;/code&gt;&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;좌항의 피연산자가 null 또는 undefined → &lt;code class=&quot;language-text&quot;&gt;undefined&lt;/code&gt; 반환&lt;/li&gt;
+&lt;li&gt;그렇지 않은 경우 → 우항의 프로퍼티를 참조&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;var elem = null;
+var value = elem?.value; // undefined&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;객체를 가리키기를 기대하는 변수가 null 또는 undefined가 아닌지 확인하고 프로퍼티를 안전하게 참조할 때 유용&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;옵셔널 체이닝 도입 이전에는&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;논리곱(&amp;amp;&amp;amp;)&lt;/code&gt;을 사용한 &lt;code class=&quot;language-text&quot;&gt;단축 평가&lt;/code&gt;를 통해 → 변수가 null 또는 undefined 인지 확인했음&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;// 💡 논리곱(&amp;amp;&amp;amp;) 연산자 vs 옵셔널 체이닝 연산자
+
+// 💩 논리곱(&amp;amp;&amp;amp;) 연산자 = 좌항 피연산자가 Falsy값이면, 좌항 피연산자를 그대로 반환한다. (단, 0 또는 &apos;&apos;은 객체로 평가될 때도 있다.)
+var str = &quot;&quot;;
+var length = str &amp;amp;&amp;amp; str.length; // &apos;&apos;
+
+// 👍 옵셔널 체이닝 = 좌항 피연산자가 Falsy값이라도 null 또는 undefined 만 아니면, 우항의 프로퍼티를 참조한다.
+var str = &quot;&quot;;
+var length = str?.length; // 0&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;null-병합-연산자-&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#null-%EB%B3%91%ED%95%A9-%EC%97%B0%EC%82%B0%EC%9E%90-&quot; aria-label=&quot;null 병합 연산자  permalink&quot; class=&quot;heading-anchor before&quot;&gt;&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;15&quot; height=&quot;15&quot; viewBox=&quot;0 0 24 24&quot;&gt;&lt;path d=&quot;M6.188 8.719c.439-.439.926-.801 1.444-1.087 2.887-1.591 6.589-.745 8.445 2.069l-2.246 2.245c-.644-1.469-2.243-2.305-3.834-1.949-.599.134-1.168.433-1.633.898l-4.304 4.306c-1.307 1.307-1.307 3.433 0 4.74 1.307 1.307 3.433 1.307 4.74 0l1.327-1.327c1.207.479 2.501.67 3.779.575l-2.929 2.929c-2.511 2.511-6.582 2.511-9.093 0s-2.511-6.582 0-9.093l4.304-4.306zm6.836-6.836l-2.929 2.929c1.277-.096 2.572.096 3.779.574l1.326-1.326c1.307-1.307 3.433-1.307 4.74 0 1.307 1.307 1.307 3.433 0 4.74l-4.305 4.305c-1.311 1.311-3.44 1.3-4.74 0-.303-.303-.564-.68-.727-1.051l-2.246 2.245c.236.358.481.667.796.982.812.812 1.846 1.417 3.036 1.704 1.542.371 3.194.166 4.613-.617.518-.286 1.005-.648 1.444-1.087l4.304-4.305c2.512-2.511 2.512-6.582.001-9.093-2.511-2.51-6.581-2.51-9.092 0z&quot;/&gt;&lt;/svg&gt;&lt;/a&gt;null 병합 연산자 &lt;code class=&quot;language-text&quot;&gt;??&lt;/code&gt;&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;좌항의 피연산자가 null 또는 undefined → 우항의 피연산자를 반환&lt;/li&gt;
+&lt;li&gt;그렇지 않은 경우 → 좌항의 프로퍼티를 참조&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;var foo = null ?? &quot;default string&quot;; // &quot;default string&quot;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;변수에 기본값을 설정할 때 유용 !&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;null 병합 연산자 도입 이전에는&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;논리합(||)을 사용한 단축 평가&lt;/code&gt; 를 통해 → 변수에 기본값을 설정했음&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;// 💡 논리합(||) 연산자 vs null 병합 연산자
+
+// 💩 논리합(||) 연산자 = 좌항의 피연산자가 Falsy값이면, 우항의 피연산자를 반환
+(단, 0 이나 &apos;&apos;은 기본값으로서 유호하다면 예기치 않은 동작이 발생 !)
+var foo = &quot;&quot; || &quot;default string&quot;; // &quot;default string&quot;
+
+// 👍 null 병합 연산자 = 좌항의 피연산자가 Falsy값이라도 null 또는 undefined 가 아니면, 좌항의 피연산자를 그대로 반환한다.
+var foo = &quot;&quot; ?? &quot;default string&quot;; // &apos;&apos;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content:encoded></item><item><title><![CDATA[8. 제어문(Control flow statement)]]></title><description><![CDATA[…]]></description><link>https://uzicandi.github.io/deep-js-8/</link><guid isPermaLink="false">https://uzicandi.github.io/deep-js-8/</guid><pubDate>Mon, 05 Aug 2024 00:00:00 GMT</pubDate><content:encoded>&lt;h3 id=&quot;제어문-개요&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#%EC%A0%9C%EC%96%B4%EB%AC%B8-%EA%B0%9C%EC%9A%94&quot; aria-label=&quot;제어문 개요 permalink&quot; class=&quot;heading-anchor before&quot;&gt;&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;15&quot; height=&quot;15&quot; viewBox=&quot;0 0 24 24&quot;&gt;&lt;path d=&quot;M6.188 8.719c.439-.439.926-.801 1.444-1.087 2.887-1.591 6.589-.745 8.445 2.069l-2.246 2.245c-.644-1.469-2.243-2.305-3.834-1.949-.599.134-1.168.433-1.633.898l-4.304 4.306c-1.307 1.307-1.307 3.433 0 4.74 1.307 1.307 3.433 1.307 4.74 0l1.327-1.327c1.207.479 2.501.67 3.779.575l-2.929 2.929c-2.511 2.511-6.582 2.511-9.093 0s-2.511-6.582 0-9.093l4.304-4.306zm6.836-6.836l-2.929 2.929c1.277-.096 2.572.096 3.779.574l1.326-1.326c1.307-1.307 3.433-1.307 4.74 0 1.307 1.307 1.307 3.433 0 4.74l-4.305 4.305c-1.311 1.311-3.44 1.3-4.74 0-.303-.303-.564-.68-.727-1.051l-2.246 2.245c.236.358.481.667.796.982.812.812 1.846 1.417 3.036 1.704 1.542.371 3.194.166 4.613-.617.518-.286 1.005-.648 1.444-1.087l4.304-4.305c2.512-2.511 2.512-6.582.001-9.093-2.511-2.51-6.581-2.51-9.092 0z&quot;/&gt;&lt;/svg&gt;&lt;/a&gt;제어문 개요&lt;/h3&gt;
+&lt;hr&gt;
+&lt;blockquote&gt;
+&lt;p&gt;제어문은 조건에 따라 코드 블록을 실행(조건문)하거나 반복실행(반복문)할 때 사용한다.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;제어문은 코드의 실행 흐름을 인위적으로 제어할 수 있다. → 순자적으로 진행하는 직관적인 코드의 흐름을 혼란스럽게 만든다.&lt;/li&gt;
+&lt;li&gt;즉, 제어문은 코드의 흐름을 이해하기 어렵게 만들어 가독성을 해치는 단점 이 있다. → 가독성이 좋지 않은 코드는 오류를 발생시키는 원인&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;+ forEach()
++ map()
++ filter()
++ reduce()
+
+같은 &quot;고차 함수&quot;를 사용한 &quot;함수형 프로그래밍 기법&quot;에서는 제어문의 사용을 억제하여 복잡성을 해결하려고 노력한다.&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;81-블록문&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#81-%EB%B8%94%EB%A1%9D%EB%AC%B8&quot; aria-label=&quot;81 블록문 permalink&quot; class=&quot;heading-anchor before&quot;&gt;&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;15&quot; height=&quot;15&quot; viewBox=&quot;0 0 24 24&quot;&gt;&lt;path d=&quot;M6.188 8.719c.439-.439.926-.801 1.444-1.087 2.887-1.591 6.589-.745 8.445 2.069l-2.246 2.245c-.644-1.469-2.243-2.305-3.834-1.949-.599.134-1.168.433-1.633.898l-4.304 4.306c-1.307 1.307-1.307 3.433 0 4.74 1.307 1.307 3.433 1.307 4.74 0l1.327-1.327c1.207.479 2.501.67 3.779.575l-2.929 2.929c-2.511 2.511-6.582 2.511-9.093 0s-2.511-6.582 0-9.093l4.304-4.306zm6.836-6.836l-2.929 2.929c1.277-.096 2.572.096 3.779.574l1.326-1.326c1.307-1.307 3.433-1.307 4.74 0 1.307 1.307 1.307 3.433 0 4.74l-4.305 4.305c-1.311 1.311-3.44 1.3-4.74 0-.303-.303-.564-.68-.727-1.051l-2.246 2.245c.236.358.481.667.796.982.812.812 1.846 1.417 3.036 1.704 1.542.371 3.194.166 4.613-.617.518-.286 1.005-.648 1.444-1.087l4.304-4.305c2.512-2.511 2.512-6.582.001-9.093-2.511-2.51-6.581-2.51-9.092 0z&quot;/&gt;&lt;/svg&gt;&lt;/a&gt;8.1 블록문&lt;/h3&gt;
+&lt;hr&gt;
+&lt;p&gt;블록문은 0개 이상의 문을 중괄호로 묶은 것.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;특징&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;언제나 문(statement)의 종료를 의미하는 자체 종결성을 갖기 때문에 세미콜론을 붙이지 않는다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;{
+  var foo = 10;
+}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;82-조건문&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#82-%EC%A1%B0%EA%B1%B4%EB%AC%B8&quot; aria-label=&quot;82 조건문 permalink&quot; class=&quot;heading-anchor before&quot;&gt;&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;15&quot; height=&quot;15&quot; viewBox=&quot;0 0 24 24&quot;&gt;&lt;path d=&quot;M6.188 8.719c.439-.439.926-.801 1.444-1.087 2.887-1.591 6.589-.745 8.445 2.069l-2.246 2.245c-.644-1.469-2.243-2.305-3.834-1.949-.599.134-1.168.433-1.633.898l-4.304 4.306c-1.307 1.307-1.307 3.433 0 4.74 1.307 1.307 3.433 1.307 4.74 0l1.327-1.327c1.207.479 2.501.67 3.779.575l-2.929 2.929c-2.511 2.511-6.582 2.511-9.093 0s-2.511-6.582 0-9.093l4.304-4.306zm6.836-6.836l-2.929 2.929c1.277-.096 2.572.096 3.779.574l1.326-1.326c1.307-1.307 3.433-1.307 4.74 0 1.307 1.307 1.307 3.433 0 4.74l-4.305 4.305c-1.311 1.311-3.44 1.3-4.74 0-.303-.303-.564-.68-.727-1.051l-2.246 2.245c.236.358.481.667.796.982.812.812 1.846 1.417 3.036 1.704 1.542.371 3.194.166 4.613-.617.518-.286 1.005-.648 1.444-1.087l4.304-4.305c2.512-2.511 2.512-6.582.001-9.093-2.511-2.51-6.581-2.51-9.092 0z&quot;/&gt;&lt;/svg&gt;&lt;/a&gt;8.2 조건문&lt;/h3&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;if..else&lt;/code&gt; 와 &lt;code class=&quot;language-text&quot;&gt;switch&lt;/code&gt;문으로 제공한다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;821-ifelse&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#821-ifelse&quot; aria-label=&quot;821 ifelse permalink&quot; class=&quot;heading-anchor before&quot;&gt;&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;15&quot; height=&quot;15&quot; viewBox=&quot;0 0 24 24&quot;&gt;&lt;path d=&quot;M6.188 8.719c.439-.439.926-.801 1.444-1.087 2.887-1.591 6.589-.745 8.445 2.069l-2.246 2.245c-.644-1.469-2.243-2.305-3.834-1.949-.599.134-1.168.433-1.633.898l-4.304 4.306c-1.307 1.307-1.307 3.433 0 4.74 1.307 1.307 3.433 1.307 4.74 0l1.327-1.327c1.207.479 2.501.67 3.779.575l-2.929 2.929c-2.511 2.511-6.582 2.511-9.093 0s-2.511-6.582 0-9.093l4.304-4.306zm6.836-6.836l-2.929 2.929c1.277-.096 2.572.096 3.779.574l1.326-1.326c1.307-1.307 3.433-1.307 4.74 0 1.307 1.307 1.307 3.433 0 4.74l-4.305 4.305c-1.311 1.311-3.44 1.3-4.74 0-.303-.303-.564-.68-.727-1.051l-2.246 2.245c.236.358.481.667.796.982.812.812 1.846 1.417 3.036 1.704 1.542.371 3.194.166 4.613-.617.518-.286 1.005-.648 1.444-1.087l4.304-4.305c2.512-2.511 2.512-6.582.001-9.093-2.511-2.51-6.581-2.51-9.092 0z&quot;/&gt;&lt;/svg&gt;&lt;/a&gt;8.2.1 if...else&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;if문의 조건식은 boolean 값으로 평가되어야 한다.&lt;/li&gt;
+&lt;li&gt;코드 블록 내에의 문이 하나뿐이라면 중괄호를 생략할 수 있다.&lt;/li&gt;
+&lt;li&gt;삼항 조건 연산자로 바꿔 쓸 수 있고, 삼항 연산자는 값으로 평가되는 표현식이다. 따라서 변수로 할당할 수 있다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;if(조건식) {
+
+}
+
+if(num &gt; 0) kind = &quot;양수&quot;;
+
+// 조건에 따라 단순히 값을 결정하여 변수에 할당하는 경우 삼항 조건 연산자를 사용하는 편이 가독성이 좋다.
+var kind = num ? (num &gt; 0 ? &apos;양수&apos; : &apos;음수&apos;) : &apos;명&apos;;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;822-switch&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#822-switch&quot; aria-label=&quot;822 switch permalink&quot; class=&quot;heading-anchor before&quot;&gt;&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;15&quot; height=&quot;15&quot; viewBox=&quot;0 0 24 24&quot;&gt;&lt;path d=&quot;M6.188 8.719c.439-.439.926-.801 1.444-1.087 2.887-1.591 6.589-.745 8.445 2.069l-2.246 2.245c-.644-1.469-2.243-2.305-3.834-1.949-.599.134-1.168.433-1.633.898l-4.304 4.306c-1.307 1.307-1.307 3.433 0 4.74 1.307 1.307 3.433 1.307 4.74 0l1.327-1.327c1.207.479 2.501.67 3.779.575l-2.929 2.929c-2.511 2.511-6.582 2.511-9.093 0s-2.511-6.582 0-9.093l4.304-4.306zm6.836-6.836l-2.929 2.929c1.277-.096 2.572.096 3.779.574l1.326-1.326c1.307-1.307 3.433-1.307 4.74 0 1.307 1.307 1.307 3.433 0 4.74l-4.305 4.305c-1.311 1.311-3.44 1.3-4.74 0-.303-.303-.564-.68-.727-1.051l-2.246 2.245c.236.358.481.667.796.982.812.812 1.846 1.417 3.036 1.704 1.542.371 3.194.166 4.613-.617.518-.286 1.005-.648 1.444-1.087l4.304-4.305c2.512-2.511 2.512-6.582.001-9.093-2.511-2.51-6.581-2.51-9.092 0z&quot;/&gt;&lt;/svg&gt;&lt;/a&gt;8.2.2 switch&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;switch문은 주어진 표현식을 평가하여 그 값과 일치하는 표현식을 갖는 case문으로 실행 흐름을 옮긴다.&lt;/li&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;if...else&lt;/code&gt; 조건식: boolean값으로 평가&lt;/li&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;switch&lt;/code&gt; 표현식: 문자열이나 숫자값인 경우가 많음&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;💡폴스루(fall through)&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;문을 실행한 후 switch문을 탈출하지 않고 모든 case와 default문을 실행하는 것&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;기본적으로 case문에는 break문을 추가해야 한다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;break 문을 생략한 폴스루가 유용한 경우&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;여러개의 case문을 하나의 조건으로 사용하기&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;// 윤년 계산
+swtich (month) {
+	case 1: case 3: case 5: case 7: case 8: case 10: case 12:
+		days = 31;
+		break;
+	case 4: case 6: case 9: case 11:
+		days = 30;
+		break;
+	case 2:
+		days = ((year % 4 === 0 || year % 100 !== 0) || (year % 400 === 0)) ? 29 : 28;
+		break;
+	default:
+		console.log(&quot;Invaild month&quot;);
+}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;case, default, break등 다양한 키워드를 사용해야 하고, 폴스루가 발생하는 등 문법도 목잡하다.&lt;/li&gt;
+&lt;li&gt;따라서 &lt;code class=&quot;language-text&quot;&gt;if..else&lt;/code&gt;문으로 해결할 수 있다면 &lt;code class=&quot;language-text&quot;&gt;switch&lt;/code&gt;문 보다 &lt;code class=&quot;language-text&quot;&gt;if..else&lt;/code&gt;문을 사용하는 편이 좋다.&lt;/li&gt;
+&lt;li&gt;조건식이 너무 많아서 가독성이 떨어지는 경우 &lt;code class=&quot;language-text&quot;&gt;switch&lt;/code&gt;를 사용한다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;83-반복문-loop-statement&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#83-%EB%B0%98%EB%B3%B5%EB%AC%B8-loop-statement&quot; aria-label=&quot;83 반복문 loop statement permalink&quot; class=&quot;heading-anchor before&quot;&gt;&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;15&quot; height=&quot;15&quot; viewBox=&quot;0 0 24 24&quot;&gt;&lt;path d=&quot;M6.188 8.719c.439-.439.926-.801 1.444-1.087 2.887-1.591 6.589-.745 8.445 2.069l-2.246 2.245c-.644-1.469-2.243-2.305-3.834-1.949-.599.134-1.168.433-1.633.898l-4.304 4.306c-1.307 1.307-1.307 3.433 0 4.74 1.307 1.307 3.433 1.307 4.74 0l1.327-1.327c1.207.479 2.501.67 3.779.575l-2.929 2.929c-2.511 2.511-6.582 2.511-9.093 0s-2.511-6.582 0-9.093l4.304-4.306zm6.836-6.836l-2.929 2.929c1.277-.096 2.572.096 3.779.574l1.326-1.326c1.307-1.307 3.433-1.307 4.74 0 1.307 1.307 1.307 3.433 0 4.74l-4.305 4.305c-1.311 1.311-3.44 1.3-4.74 0-.303-.303-.564-.68-.727-1.051l-2.246 2.245c.236.358.481.667.796.982.812.812 1.846 1.417 3.036 1.704 1.542.371 3.194.166 4.613-.617.518-.286 1.005-.648 1.444-1.087l4.304-4.305c2.512-2.511 2.512-6.582.001-9.093-2.511-2.51-6.581-2.51-9.092 0z&quot;/&gt;&lt;/svg&gt;&lt;/a&gt;8.3 반복문 (loop statement)&lt;/h3&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;자바스크립트는 &lt;code class=&quot;language-text&quot;&gt;for&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;while&lt;/code&gt;, &lt;code class=&quot;language-text&quot;&gt;do..while&lt;/code&gt;문을 제공한다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;💡반복문을 대체할 수 있는 다양한 기능&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;forEach&lt;/code&gt;: 배열을 순회할 때 사용&lt;/li&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;for..in&lt;/code&gt;: 객체의 프로퍼티를 열거할 때 사용&lt;/li&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;for..of&lt;/code&gt;: ES6에서 도입된 이터러블을 순회할 수 있음&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;831-for-문&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#831-for-%EB%AC%B8&quot; aria-label=&quot;831 for 문 permalink&quot; class=&quot;heading-anchor before&quot;&gt;&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;15&quot; height=&quot;15&quot; viewBox=&quot;0 0 24 24&quot;&gt;&lt;path d=&quot;M6.188 8.719c.439-.439.926-.801 1.444-1.087 2.887-1.591 6.589-.745 8.445 2.069l-2.246 2.245c-.644-1.469-2.243-2.305-3.834-1.949-.599.134-1.168.433-1.633.898l-4.304 4.306c-1.307 1.307-1.307 3.433 0 4.74 1.307 1.307 3.433 1.307 4.74 0l1.327-1.327c1.207.479 2.501.67 3.779.575l-2.929 2.929c-2.511 2.511-6.582 2.511-9.093 0s-2.511-6.582 0-9.093l4.304-4.306zm6.836-6.836l-2.929 2.929c1.277-.096 2.572.096 3.779.574l1.326-1.326c1.307-1.307 3.433-1.307 4.74 0 1.307 1.307 1.307 3.433 0 4.74l-4.305 4.305c-1.311 1.311-3.44 1.3-4.74 0-.303-.303-.564-.68-.727-1.051l-2.246 2.245c.236.358.481.667.796.982.812.812 1.846 1.417 3.036 1.704 1.542.371 3.194.166 4.613-.617.518-.286 1.005-.648 1.444-1.087l4.304-4.305c2.512-2.511 2.512-6.582.001-9.093-2.511-2.51-6.581-2.51-9.092 0z&quot;/&gt;&lt;/svg&gt;&lt;/a&gt;8.3.1 for 문&lt;/h3&gt;
+&lt;p&gt;for문은 조건식이 거짓으로 평가될 때까지 코드 블록을 반복 실행한다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;for(변수 선언문 또는 할당문; 조건식; 증감식) {
+  조건식이 참인 경우 반복 실행될 문;
+}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;figure class=&apos;gatsby-resp-image-figure&apos; style=&apos;margin-bottom: 16px;&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-wrapper&apos; style=&apos;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 680px; &apos;&gt;
+      &lt;a class=&apos;gatsby-resp-image-link&apos; href=&apos;/static/5cc3daef3e8c20b415ad8be738732d4b/74cb2/image.png&apos; style=&apos;display: block&apos; target=&apos;_blank&apos; rel=&apos;noopener&apos;&gt;
+    &lt;span class=&apos;gatsby-resp-image-background-image&apos; style=&quot;padding-bottom: 61.76470588235294%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAMCAYAAABiDJ37AAAACXBIWXMAABYlAAAWJQFJUiTwAAABoklEQVR42q2SW4/aMBCF+f8/qd0Hun1A6kqULg0qCtmKLZcECLmH2HH8dZxUAqpW7cNaskZz7DlzOTPif48x2DTjog1N2/312+ifRNYOtijQDw8sNhlfX1N6Sq3oyhJlLKazV0IXM1w7WAe2LeQ5tWqpXXSRo969x/uRMl8nKPfndU3z+BEvrDgXzT3hYO3VETI7nxMcatbnGtQF/emJIKr4ts2Ia0mYnGn9Fd/jC2mpBkKt4fnZ8vICUXRisVB4HpRlQ3SIiI8ngtOOMItJZYZRGBKlMTvx4/iMH6xYLpfs93u0kI1cQXEsyRJXVCEPLRLTP2ZZhu06kqogr0pKmaMSvJbZZYKV8r8QLElTSZaKbuYqirUdnQS7tp01ZlDyFuuHUVXYw4FUWi4u+k63vmX7y9tsNkwmE2azGdPpZ7nTHguCgPF4zBfBPd9Hr3zaD488rTN2cTUk7cW092vTNE1fdi5iuDZKWYe6rlFKyQhCjq4qwc3xSCcDDwvNRZmhwts9dK24+1Zn5KrYbrfXtfnjbtv7t9t9/Z3QKeMUfasKfwLhc6Ok5gGiLgAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;&gt;&lt;/span&gt;
+  &lt;img class=&apos;gatsby-resp-image-image&apos; alt=&apos;for문의 실행순서&apos; title=&apos;&apos; src=&apos;/static/5cc3daef3e8c20b415ad8be738732d4b/ca1dc/image.png&apos; srcset=&apos;/static/5cc3daef3e8c20b415ad8be738732d4b/e7570/image.png 170w,
+/static/5cc3daef3e8c20b415ad8be738732d4b/f46e7/image.png 340w,
+/static/5cc3daef3e8c20b415ad8be738732d4b/ca1dc/image.png 680w,
+/static/5cc3daef3e8c20b415ad8be738732d4b/02d09/image.png 1020w,
+/static/5cc3daef3e8c20b415ad8be738732d4b/9d567/image.png 1360w,
+/static/5cc3daef3e8c20b415ad8be738732d4b/74cb2/image.png 1450w&apos; sizes=&apos;(max-width: 680px) 100vw, 680px&apos; style=&apos;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&apos; loading=&apos;lazy&apos; decoding=&apos;async&apos;&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;
+    &lt;figcaption class=&apos;gatsby-resp-image-figcaption&apos;&gt;for문의 실행순서&lt;/figcaption&gt;
+  &lt;/figure&gt;&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;1️⃣ for문을 실행하면 먼저 변수선언문 var i = 0이 실행된다.
+변수 선언문은 단 한 번만 실행된다.
+
+2️⃣ 변수 선언문의 실행이 종료되면 조건식이 실행된다.
+현재 i 변수의 값은 0이므로 조건식의 평가 결과는 true다.
+
+3️⃣ 조건식의 평가 결과가 true이므로 코드 블록이 실행된다.
+증감문으로 실행 흐름이 이동하는 것이 아니라 코드 블록으로 실행 흐름이 이동하는 것에 주의하자.
+
+4️⃣ 코드 블록의 실행이 종료되면 증감식 i++가 실행되어 i 변수의 값은 1이 된다.
+
+5️⃣ 증감식 실행이 종료되면 다시 조건식이 실행된다.
+변수 선언문이 실행되는 것이 아니라 조건식이 실행된다는 점에 주의하자
+(앞에서 설명했지만 변수 선언문은 단 한 번만 실행된다.)
+현재 i 변수의 값은 1이므로 조건식의 평가 결과는 true다.&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;for문의 변수 선언문, 조건식, 증감식은 모두 옵션이므로 반드시 사용할 필요는 없다.&lt;/li&gt;
+&lt;li&gt;단, 어떤 식도 선언하지 않으면 무한루프가 된다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;for (;;) { ... } //무한루프&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;832-while-문&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#832-while-%EB%AC%B8&quot; aria-label=&quot;832 while 문 permalink&quot; class=&quot;heading-anchor before&quot;&gt;&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;15&quot; height=&quot;15&quot; viewBox=&quot;0 0 24 24&quot;&gt;&lt;path d=&quot;M6.188 8.719c.439-.439.926-.801 1.444-1.087 2.887-1.591 6.589-.745 8.445 2.069l-2.246 2.245c-.644-1.469-2.243-2.305-3.834-1.949-.599.134-1.168.433-1.633.898l-4.304 4.306c-1.307 1.307-1.307 3.433 0 4.74 1.307 1.307 3.433 1.307 4.74 0l1.327-1.327c1.207.479 2.501.67 3.779.575l-2.929 2.929c-2.511 2.511-6.582 2.511-9.093 0s-2.511-6.582 0-9.093l4.304-4.306zm6.836-6.836l-2.929 2.929c1.277-.096 2.572.096 3.779.574l1.326-1.326c1.307-1.307 3.433-1.307 4.74 0 1.307 1.307 1.307 3.433 0 4.74l-4.305 4.305c-1.311 1.311-3.44 1.3-4.74 0-.303-.303-.564-.68-.727-1.051l-2.246 2.245c.236.358.481.667.796.982.812.812 1.846 1.417 3.036 1.704 1.542.371 3.194.166 4.613-.617.518-.286 1.005-.648 1.444-1.087l4.304-4.305c2.512-2.511 2.512-6.582.001-9.093-2.511-2.51-6.581-2.51-9.092 0z&quot;/&gt;&lt;/svg&gt;&lt;/a&gt;8.3.2 while 문&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;주어진 조건식의 평가 결과가 참이면 코드 블록을 계속해서 반복 실행한다.&lt;/li&gt;
+&lt;li&gt;while문은 조건문의 평가 결과가 거짓이 되면 코드 블록을 실행하지 않고 종료한다.&lt;/li&gt;
+&lt;li&gt;무한 루프에서 탈출하기 위해서는 코드 블록 내에 &lt;code class=&quot;language-text&quot;&gt;if&lt;/code&gt;문으로 탈출 조건을 만들고 &lt;code class=&quot;language-text&quot;&gt;break&lt;/code&gt;문으로 탈출한다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;while(true) {
+  count++;
+  if(count === 3) break;
+}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;833-dowhile-문&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#833-dowhile-%EB%AC%B8&quot; aria-label=&quot;833 dowhile 문 permalink&quot; class=&quot;heading-anchor before&quot;&gt;&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;15&quot; height=&quot;15&quot; viewBox=&quot;0 0 24 24&quot;&gt;&lt;path d=&quot;M6.188 8.719c.439-.439.926-.801 1.444-1.087 2.887-1.591 6.589-.745 8.445 2.069l-2.246 2.245c-.644-1.469-2.243-2.305-3.834-1.949-.599.134-1.168.433-1.633.898l-4.304 4.306c-1.307 1.307-1.307 3.433 0 4.74 1.307 1.307 3.433 1.307 4.74 0l1.327-1.327c1.207.479 2.501.67 3.779.575l-2.929 2.929c-2.511 2.511-6.582 2.511-9.093 0s-2.511-6.582 0-9.093l4.304-4.306zm6.836-6.836l-2.929 2.929c1.277-.096 2.572.096 3.779.574l1.326-1.326c1.307-1.307 3.433-1.307 4.74 0 1.307 1.307 1.307 3.433 0 4.74l-4.305 4.305c-1.311 1.311-3.44 1.3-4.74 0-.303-.303-.564-.68-.727-1.051l-2.246 2.245c.236.358.481.667.796.982.812.812 1.846 1.417 3.036 1.704 1.542.371 3.194.166 4.613-.617.518-.286 1.005-.648 1.444-1.087l4.304-4.305c2.512-2.511 2.512-6.582.001-9.093-2.511-2.51-6.581-2.51-9.092 0z&quot;/&gt;&lt;/svg&gt;&lt;/a&gt;8.3.3 do...while 문&lt;/h3&gt;
+&lt;p&gt;코드 블록을 먼저 실행하고 조건식을 평가한다.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;// count가 3보다 작을 때까지 코드 블록을 반복 실행한다.
+
+var count = 0;
+
+do {
+  console.log(count); // 0 1 2
+  count ++;
+} while (count &amp;lt; 3);&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;84-break문&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#84-break%EB%AC%B8&quot; aria-label=&quot;84 break문 permalink&quot; class=&quot;heading-anchor before&quot;&gt;&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;15&quot; height=&quot;15&quot; viewBox=&quot;0 0 24 24&quot;&gt;&lt;path d=&quot;M6.188 8.719c.439-.439.926-.801 1.444-1.087 2.887-1.591 6.589-.745 8.445 2.069l-2.246 2.245c-.644-1.469-2.243-2.305-3.834-1.949-.599.134-1.168.433-1.633.898l-4.304 4.306c-1.307 1.307-1.307 3.433 0 4.74 1.307 1.307 3.433 1.307 4.74 0l1.327-1.327c1.207.479 2.501.67 3.779.575l-2.929 2.929c-2.511 2.511-6.582 2.511-9.093 0s-2.511-6.582 0-9.093l4.304-4.306zm6.836-6.836l-2.929 2.929c1.277-.096 2.572.096 3.779.574l1.326-1.326c1.307-1.307 3.433-1.307 4.74 0 1.307 1.307 1.307 3.433 0 4.74l-4.305 4.305c-1.311 1.311-3.44 1.3-4.74 0-.303-.303-.564-.68-.727-1.051l-2.246 2.245c.236.358.481.667.796.982.812.812 1.846 1.417 3.036 1.704 1.542.371 3.194.166 4.613-.617.518-.286 1.005-.648 1.444-1.087l4.304-4.305c2.512-2.511 2.512-6.582.001-9.093-2.511-2.51-6.581-2.51-9.092 0z&quot;/&gt;&lt;/svg&gt;&lt;/a&gt;8.4 break문&lt;/h3&gt;
+&lt;hr&gt;
+&lt;ul&gt;
+&lt;li&gt;레이블 문, 반복문, 또는 switch 문의 코드블록을 탈출한다. 이 외의 블록에 break문을 사용하면 SyntaxError가 발생한다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;❓레이블문&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;식별자가 붙은 문&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;// foo라는 레이블 식별자가 붙은 레이블 문
+foo: console.log(&apos;foo&apos;);&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;프로그램의 실행 순서를 제어하는 데 사용한다.&lt;/li&gt;
+&lt;li&gt;switch문의 &lt;code class=&quot;language-text&quot;&gt;case&lt;/code&gt;문과 &lt;code class=&quot;language-text&quot;&gt;default&lt;/code&gt;문도 레이블 문이다.&lt;/li&gt;
+&lt;li&gt;레이블 문을 탈출하려면 break문에 레이블 식별자를 지정한다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;foo: {
+  break foo;
+}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;내부 for문에서 break문을 실행하면 탈출하여 외부 for문으로 진입한다.&lt;/li&gt;
+&lt;li&gt;내부 for문이 아닌 &lt;code class=&quot;language-text&quot;&gt;외부 for문을 탈출하려면&lt;/code&gt; 레이블 문을 사용한다&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;outer: for() {
+  for() {
+    if(i + j === 3) break outer;
+  }
+}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;레이블 문은 중첩된 for 문 외부로 탈출 할 때 유용하지만 그 외에는 일반적으로 권장하지 않는다.&lt;/li&gt;
+&lt;li&gt;레이블 문 사용시 → 프로그램의 흐름이 복잡해져서 가독성이 나빠지고 오류를 발생시킬 가능성이 높아지기 때문 ( 존재 정도만 인지할 것 )&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;85-Continue-문&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#85-Continue-%EB%AC%B8&quot; aria-label=&quot;85 Continue 문 permalink&quot; class=&quot;heading-anchor before&quot;&gt;&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;15&quot; height=&quot;15&quot; viewBox=&quot;0 0 24 24&quot;&gt;&lt;path d=&quot;M6.188 8.719c.439-.439.926-.801 1.444-1.087 2.887-1.591 6.589-.745 8.445 2.069l-2.246 2.245c-.644-1.469-2.243-2.305-3.834-1.949-.599.134-1.168.433-1.633.898l-4.304 4.306c-1.307 1.307-1.307 3.433 0 4.74 1.307 1.307 3.433 1.307 4.74 0l1.327-1.327c1.207.479 2.501.67 3.779.575l-2.929 2.929c-2.511 2.511-6.582 2.511-9.093 0s-2.511-6.582 0-9.093l4.304-4.306zm6.836-6.836l-2.929 2.929c1.277-.096 2.572.096 3.779.574l1.326-1.326c1.307-1.307 3.433-1.307 4.74 0 1.307 1.307 1.307 3.433 0 4.74l-4.305 4.305c-1.311 1.311-3.44 1.3-4.74 0-.303-.303-.564-.68-.727-1.051l-2.246 2.245c.236.358.481.667.796.982.812.812 1.846 1.417 3.036 1.704 1.542.371 3.194.166 4.613-.617.518-.286 1.005-.648 1.444-1.087l4.304-4.305c2.512-2.511 2.512-6.582.001-9.093-2.511-2.51-6.581-2.51-9.092 0z&quot;/&gt;&lt;/svg&gt;&lt;/a&gt;8.5 Continue 문&lt;/h3&gt;
+&lt;hr&gt;
+&lt;blockquote&gt;
+&lt;p&gt;continue 문 은 반복문의 코드 블록 실행을 현 시점에서 중단하고 ,
+반복문의 증감식으로 실행 흐름을 이동시킨다. ( break 문처럼 반복문을 탈출하지는 않는다. )&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;// for (var i = 0; i &amp;lt; string.length; i++) {
+  // search값이 아니면 현 지점에서 실행을 중단하고 반복문의 증감식으로 이동한다.
+  if(string[i] !== search) continue;
+  count++; // continue문이 실행되면 이 문은 실행되지 않는다.
+}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;if 문 내에서 &lt;code class=&quot;language-text&quot;&gt;실행해야 할 코드가 길다면&lt;/code&gt; → &lt;code class=&quot;language-text&quot;&gt;들여쓰기가 한 단계 더 깊어지므로&lt;/code&gt; , continue 문을 사용하는 편이 가독성이 더 좋을 수 있다.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;// if문 내에서 여러 코드 작성해야 할 경우 -&gt; continue 문을 사용하지 않았을 경우
+var arr = [1, 2, 3, 4, 5];
+var target = 3;
+var count = 0;
+
+for (var i = 0; i &amp;lt; arr.length; i++) {
+  // arr[i] 가 target 이하라면 count 증감
+  if (arr[i] &amp;lt;= target) {
+    count++;
+    // code...
+    // code...
+    // code...
+  }
+}
+
+// if문 내에서 여러 코드 작성해야 할 경우 -&gt; continue 문을 사용한 경우 -&gt; depth가 하나 줄어들었다.
+var arr = [1, 2, 3, 4, 5];
+var target = 3;
+var count = 0;
+
+for (var i = 0; i &amp;lt; arr.length; i++) {
+  // arr[i] 가 target 초과이면 count 증감하지 않는다.
+  if (arr[i] &gt; target) continue;
+
+  count++;
+  // code...
+  // code...
+  // code...
+}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</content:encoded></item><item><title><![CDATA[38. 브라우저의 렌더링 과정]]></title><description><![CDATA[브라우저가 HTML, CSS, JS로 작성된 텍스트 문서를 어떻게 파싱(해석)하여 브라우저에 렌더링하는지 살펴보자 브라우저 렌더링 과정 브라우저는 HTML, CSS, JS…]]></description><link>https://uzicandi.github.io/deep-js-38/</link><guid isPermaLink="false">https://uzicandi.github.io/deep-js-38/</guid><pubDate>Sun, 04 Aug 2024 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;브라우저가 HTML, CSS, JS로 작성된 텍스트 문서를 어떻게 파싱(해석)하여 브라우저에 렌더링하는지 살펴보자&lt;/p&gt;
 &lt;h4 id=&quot;브라우저-렌더링-과정&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#%EB%B8%8C%EB%9D%BC%EC%9A%B0%EC%A0%80-%EB%A0%8C%EB%8D%94%EB%A7%81-%EA%B3%BC%EC%A0%95&quot; aria-label=&quot;브라우저 렌더링 과정 permalink&quot; class=&quot;heading-anchor before&quot;&gt;&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;15&quot; height=&quot;15&quot; viewBox=&quot;0 0 24 24&quot;&gt;&lt;path d=&quot;M6.188 8.719c.439-.439.926-.801 1.444-1.087 2.887-1.591 6.589-.745 8.445 2.069l-2.246 2.245c-.644-1.469-2.243-2.305-3.834-1.949-.599.134-1.168.433-1.633.898l-4.304 4.306c-1.307 1.307-1.307 3.433 0 4.74 1.307 1.307 3.433 1.307 4.74 0l1.327-1.327c1.207.479 2.501.67 3.779.575l-2.929 2.929c-2.511 2.511-6.582 2.511-9.093 0s-2.511-6.582 0-9.093l4.304-4.306zm6.836-6.836l-2.929 2.929c1.277-.096 2.572.096 3.779.574l1.326-1.326c1.307-1.307 3.433-1.307 4.74 0 1.307 1.307 1.307 3.433 0 4.74l-4.305 4.305c-1.311 1.311-3.44 1.3-4.74 0-.303-.303-.564-.68-.727-1.051l-2.246 2.245c.236.358.481.667.796.982.812.812 1.846 1.417 3.036 1.704 1.542.371 3.194.166 4.613-.617.518-.286 1.005-.648 1.444-1.087l4.304-4.305c2.512-2.511 2.512-6.582.001-9.093-2.511-2.51-6.581-2.51-9.092 0z&quot;/&gt;&lt;/svg&gt;&lt;/a&gt;브라우저 렌더링 과정&lt;/h4&gt;
 &lt;ol&gt;
 &lt;li&gt;브라우저는 HTML, CSS, JS, 이미지, 폰트 파일 등 렌더링에 필요한 리소스를 요청하고 서버로부터 응답을 받는다.&lt;/li&gt;
@@ -184,7 +691,7 @@ link태그의 href 어트리뷰트에 지정된 CSS 파일을 서버에 요청�
 &lt;ul&gt;
 &lt;li&gt;DOM 생성이 완료된 이후 실행되어야 할 자바스크립트에 유용하다.&lt;/li&gt;
 &lt;li&gt;defer 어트리뷰트는 IE10 이상에서 지원된다. IE6 ~ 9에서도 지원되기는 하지만 정상적으로 동작하지 않을 수 있다.&lt;/li&gt;
-&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[7. 연산자]]></title><description><![CDATA[암묵적 타입 변환(=타입 강제 변환) 동등비교 vs 일치비교   : 좌항과 우항의 피연산자를 비교할 때, 먼저  타입을 일치시킨 후, 값이 같은지 비교   : 타입도 같고, 값도 같은지 비교, 즉, 암묵적 타입 변환을 하지 않고 값을 비교 NaN…]]></description><link>https://uzicandi.github.io/deep-js-7/</link><guid isPermaLink="false">https://uzicandi.github.io/deep-js-7/</guid><pubDate>Sun, 04 Aug 2024 00:00:00 GMT</pubDate><content:encoded>&lt;h3 id=&quot;암묵적-타입-변환타입-강제-변환&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#%EC%95%94%EB%AC%B5%EC%A0%81-%ED%83%80%EC%9E%85-%EB%B3%80%ED%99%98%ED%83%80%EC%9E%85-%EA%B0%95%EC%A0%9C-%EB%B3%80%ED%99%98&quot; aria-label=&quot;암묵적 타입 변환타입 강제 변환 permalink&quot; class=&quot;heading-anchor before&quot;&gt;&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;15&quot; height=&quot;15&quot; viewBox=&quot;0 0 24 24&quot;&gt;&lt;path d=&quot;M6.188 8.719c.439-.439.926-.801 1.444-1.087 2.887-1.591 6.589-.745 8.445 2.069l-2.246 2.245c-.644-1.469-2.243-2.305-3.834-1.949-.599.134-1.168.433-1.633.898l-4.304 4.306c-1.307 1.307-1.307 3.433 0 4.74 1.307 1.307 3.433 1.307 4.74 0l1.327-1.327c1.207.479 2.501.67 3.779.575l-2.929 2.929c-2.511 2.511-6.582 2.511-9.093 0s-2.511-6.582 0-9.093l4.304-4.306zm6.836-6.836l-2.929 2.929c1.277-.096 2.572.096 3.779.574l1.326-1.326c1.307-1.307 3.433-1.307 4.74 0 1.307 1.307 1.307 3.433 0 4.74l-4.305 4.305c-1.311 1.311-3.44 1.3-4.74 0-.303-.303-.564-.68-.727-1.051l-2.246 2.245c.236.358.481.667.796.982.812.812 1.846 1.417 3.036 1.704 1.542.371 3.194.166 4.613-.617.518-.286 1.005-.648 1.444-1.087l4.304-4.305c2.512-2.511 2.512-6.582.001-9.093-2.511-2.51-6.581-2.51-9.092 0z&quot;/&gt;&lt;/svg&gt;&lt;/a&gt;암묵적 타입 변환(=타입 강제 변환)&lt;/h3&gt;
+&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[7. 연산자(Operator)]]></title><description><![CDATA[암묵적 타입 변환(=타입 강제 변환) 동등비교 vs 일치비교   : 좌항과 우항의 피연산자를 비교할 때, 먼저  타입을 일치시킨 후, 값이 같은지 비교   : 타입도 같고, 값도 같은지 비교, 즉, 암묵적 타입 변환을 하지 않고 값을 비교 NaN…]]></description><link>https://uzicandi.github.io/deep-js-7/</link><guid isPermaLink="false">https://uzicandi.github.io/deep-js-7/</guid><pubDate>Sun, 04 Aug 2024 00:00:00 GMT</pubDate><content:encoded>&lt;h3 id=&quot;암묵적-타입-변환타입-강제-변환&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#%EC%95%94%EB%AC%B5%EC%A0%81-%ED%83%80%EC%9E%85-%EB%B3%80%ED%99%98%ED%83%80%EC%9E%85-%EA%B0%95%EC%A0%9C-%EB%B3%80%ED%99%98&quot; aria-label=&quot;암묵적 타입 변환타입 강제 변환 permalink&quot; class=&quot;heading-anchor before&quot;&gt;&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;15&quot; height=&quot;15&quot; viewBox=&quot;0 0 24 24&quot;&gt;&lt;path d=&quot;M6.188 8.719c.439-.439.926-.801 1.444-1.087 2.887-1.591 6.589-.745 8.445 2.069l-2.246 2.245c-.644-1.469-2.243-2.305-3.834-1.949-.599.134-1.168.433-1.633.898l-4.304 4.306c-1.307 1.307-1.307 3.433 0 4.74 1.307 1.307 3.433 1.307 4.74 0l1.327-1.327c1.207.479 2.501.67 3.779.575l-2.929 2.929c-2.511 2.511-6.582 2.511-9.093 0s-2.511-6.582 0-9.093l4.304-4.306zm6.836-6.836l-2.929 2.929c1.277-.096 2.572.096 3.779.574l1.326-1.326c1.307-1.307 3.433-1.307 4.74 0 1.307 1.307 1.307 3.433 0 4.74l-4.305 4.305c-1.311 1.311-3.44 1.3-4.74 0-.303-.303-.564-.68-.727-1.051l-2.246 2.245c.236.358.481.667.796.982.812.812 1.846 1.417 3.036 1.704 1.542.371 3.194.166 4.613-.617.518-.286 1.005-.648 1.444-1.087l4.304-4.305c2.512-2.511 2.512-6.582.001-9.093-2.511-2.51-6.581-2.51-9.092 0z&quot;/&gt;&lt;/svg&gt;&lt;/a&gt;암묵적 타입 변환(=타입 강제 변환)&lt;/h3&gt;
 &lt;hr&gt;
 &lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;// number + string : 문자열 연결 연산자
 &quot;1&quot; + 2; // &apos;12&apos;
