@@ -1,5 +1,5 @@
 ---
-title: "19. 프로토타입 (Prototype)"
+title: "19-1. 프로토타입 (Prototype) (1)"
 description:
 date: 2024-08-16
 update: 2024-08-16
@@ -308,3 +308,30 @@ const me = new Person('Lee');
 // 결국 Person.prototype과 me.__proto__는 동일한 프로토타입을 가리킨다.
 console.log(Person.prototype === me.__proto__); // true
 ```
+
+![객체의 __proto__ 접근자 프로퍼티와 함수 객체의 prototype 프로퍼티는 결국 동일한 프로토타입을 가진다.](image-3.png)
+
+#### 프로토타입의 constructor 프로퍼티와 생성자 함수
+
+**모든 프로토타입은 constructor 프로퍼티를 갖는다.**
+이 **constructor 프로퍼티**는 prototype 프로퍼티로 **자신을 참조하고 있는 생성자 함수**를 가리킨다.
+
+이 연결은 **생성자 함수가 생성**될 때, 즉 **함수 객체가 생성될 때** 이뤄진다.
+
+```cs
+// 생성자 함수
+function Person(name) {
+  this.name = name;
+}
+
+const me = new Person('Lee');
+
+// me 객체의 생성자 함수는 Person이다.
+console.log(me.constructor === Person); // true
+```
+
+Person 생성자 함수는 me 객체를 생성했다.
+이때 me 객체는 프로토타입의 constructor 프로퍼티를 통해 생성자 함수와 연결된다.
+me 객체에는 constructor 프로퍼티가 없지만, me 객체의 프로토타입인 Person.prototype에는 constructor 프로퍼티가 있다.
+
+따라서 me 객체는 프로토타입인 Person.prototype의 constructor 프로퍼티를 상속받아 사용할 수 있다.
