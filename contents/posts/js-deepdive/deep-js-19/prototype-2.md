@@ -326,8 +326,150 @@ me.sayHello = function () {
   console.log(`Instance Method`)
 };
 
-// 인스턴스 메서드가 호출된다. 프로토타입 메서드는 인스턴스 메서드에 의해 가려진다.
+// 프로토타입 메서드는 인스턴스 메서드에 의해 가려지고, 인스턴스 메서드가 호출된다.
+// Property Shadowing
 me.sayHello(); // Instance Method
 ```
 
 생성자 함수로 객체(인스턴스)를 생성한 다음, 인스턴스에 메서드를 추가했다.
+
+![오버라이딩과 프로퍼티 섀도잉](image-10.png)
+
+- `프로토 타입 프로퍼티`와 같은 이름의 프로퍼티를 `인스턴스에 추가`하면
+  - 프로토타입 체인을 따라 프로토타입 프로퍼티를 검색하여
+  - 프로퍼티를 덮어쓰는 것이 아니라, **인스턴스 프로퍼티로 추가한다.**
+  - 이때 인스턴스 메서드 sayHello는 **프로토타입 메서드 sayHello를 오버라이딩**하여
+  - 프로토타입 메서드 sayHello는 가려진다.
+
+**오버라이딩(overriding)**
+
+*상위 클래스가 가지고 있는 메서드*를 **하위 클래스가 재정의**하여 사용하는 방식
+
+**오버로딩(overloading)**
+
+함수의 이름은 동일하지만 매개변수의 타입 또는 개수가 다른 메서드를 구현하고
+매개변수에 의해 메서드를 구별하여 호출하는 방식.
+
+자바스크립트는 오버로딩을 지원하지 않지만 arguments 객체를 사용하여 구현할 수는 있다.
+
+**프로퍼티 삭제**
+
+- 프로퍼티를 삭제하면, 인스턴스 프로퍼티가 삭제된다.
+- 프로토타입 프로퍼티는 삭제 되지 않는다.
+
+  - 하위 객체를 통해 프로토타입 프로퍼티를 변경 또는 삭제하는 것은 불가능하다.
+  - 즉, get은 허용되나 set은 허용되지 않는다.
+
+  ```cs
+    delete me.sayHello();
+    // 인스턴스에는 sayHello 메서드가 없으므로 프로토타입 메서드가 호출된다.
+    me.sayHello(); // Prototype Method
+  ```
+
+- 프로토타입 프로퍼티를 변경 또는 삭제하려면 **하위 객체**를 통해 프로토타입 체인으로 접근하는 것이 아니라 **프로토타입에 직접 접근**해야 한다.
+
+  ```cs
+  // 프로토타입 메서드 변경
+  Person.prototype.sayHello = function() {
+    console.log('hi');
+  };
+  me.sayHello(); // hi
+
+  // 프로토타입 메서드 삭제
+  delete Person.prototype.sayHello();
+  me.sayHello(); // TypeError: me.sayHello is not a function
+  ```
+
+### 19.9 프로토타입의 교체
+
+---
+
+> 프로토타입은 `생성자 함수` 또는 `인스턴스`에 의해 동적으로 교체할 수 있다.
+
+> 객체간 상속관계를 동적으로 변경하는 것은 번거로우므로, 상속관계를 인위적으로 설정하려면 직접상속을 하거나, 클래스를 사용한다.
+
+#### 19.9.1 생성자 함수에 의한 프로토타입의 교체
+
+```cs
+const Person = (function () {
+  function Person(name) {
+    this.name = name;
+  }
+
+  // 1️⃣ 생성자 함수의 prototype 프로퍼티를 통해 프로토타입을 교체
+  // 객체 리터럴을 할당했다.
+  Person.prototype = {
+    sayHello() {
+      console.log(`Hi! My name is ${this.name}`);
+    }
+  };
+
+  return Person;
+}());
+
+const me = new Person('Lee');
+```
+
+![생성자 함수에 의한 프로토타입의 교체](image-11.png)
+
+- 프로토타입으로 교체한 **객체 리터럴**에는 **constructor 프로퍼티가 없다.**
+  - constructor 프로퍼티는 **자바스크립트 엔진이 프로토타입을 생성할 때 암묵적으로 추가**한 프로퍼티다.
+  - 따라서 **me 객체의 생성자 함수**를 검색하면 Person이 아닌 **Object**가 나온다.
+  ```cs
+  // 프로토타입을 교체하면 constructor 프로퍼티와 생성자 함수간의 연결이 파괴된다.
+  console.log(me.constructor === Person); // false
+  // 프로토타입 체인을 따라 Object.prototype의 constructor 프로퍼티가 검색된다.
+  console.log(me.constructor === Object); // true
+  ```
+- 이처럼 프로토타입을 교체하면 constructor 프로퍼티와 생성자 함수간의 연결이 파괴된다.
+- 프로토타입으로 교체한 객체 리터럴에 constructor 프로퍼티를 추가하여 프로토타입의 constructor 프로퍼티를 되살린다.
+
+```cs
+  Person.prototype = {
+  constructor: Person,
+    sayHello() {
+      console.log(`Hi! My name is ${this.name}`);
+    }
+  };
+
+console.log(me.constructor === Person); // true
+console.log(me.constructor === Object); // false
+```
+
+#### 19.9.2 인스턴스에 의한 프로토타입의 교체
+
+프로토타입은 생성자 함수의 prototype 프로퍼티뿐만 아니라
+
+- 인스턴스의 `__proto__`접근자 프로퍼티(또는 `Object.getPrototypeOf` 메서드)를 통해 접근할 수 있고, `Object.setPrototypeOf`으로 교체할 수 있다.
+
+```cs
+function Person(name) {
+  this.name = name;
+}
+
+const me = new Person('Lee');
+
+// 프로토타입으로 교체할 객체
+const parent = {
+  // 생성자 함수에 의한 프로토타입 재정의 때와 같이 constructor가 파괴되는 것을 constructor 를 해당 생성자 함수로 재설정하면 매꿀 수 있다.
+  constructor: Person,
+  sayHello() {
+    console.log(`Hi! My name is ${this.name}`);
+  }
+};
+
+// 생성자 함수의 prototype 프로퍼티와 프로토타입 간의 연결을 설정
+Person.prototype = parent;
+
+// ✅ me 객체의 프로토타입을 parent 객체로 교체한다
+Object.setPrototypeOf(me, parent);
+// 위 코드는 아래의 코드와 동일하게 동작한다.
+// me.__proto__ = parent;
+
+me.sayHello(); // Hi! My name is Lee
+
+// 생성자 함수의 prototype 프로퍼티가 교체된 프로토타입을 가리킨다.
+console.log(Person.prototype === Object.getPrototypeOf(me)); // true
+```
+
+![인스턴스에 의한 프로토타입의 교체](image-12.png)
