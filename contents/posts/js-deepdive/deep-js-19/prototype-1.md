@@ -1,5 +1,5 @@
 ---
-title: "19-1. 프로토타입 (Prototype) (1)"
+title: "19. 프로토타입 (Prototype) (1)"
 description:
 date: 2024-08-16
 update: 2024-08-16

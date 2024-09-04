@@ -1,5 +1,5 @@
 ---
-title: "19-2. 프로토타입 (Prototype) (2)"
+title: "19. 프로토타입 (Prototype) (2)"
 description:
 date: 2024-08-17
 update: 2024-08-17
@@ -473,3 +473,5 @@ console.log(Person.prototype === Object.getPrototypeOf(me)); // true
 ```
 
 ![인스턴스에 의한 프로토타입의 교체](image-12.png)
+
+![프로토타입 교체 방식에 의해 발생하는 차이](image-13.png)
