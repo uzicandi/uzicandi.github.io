@@ -1,5 +1,5 @@
 ---
-title: "3. 리액트의 모든 훅 파헤치기 "
+title: "3-2. useMemo, useCallback, useRef, useLayoutEffect"
 description:
 date: 2024-09-04
 update: 2024-09-04

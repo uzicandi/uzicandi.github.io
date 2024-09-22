@@ -1,5 +1,5 @@
 ---
-title: "3. 리액트의 모든 훅 파헤치기 (useState, useEffect)"
+title: "3-1. useState, useEffect"
 description:
 date: 2024-09-03
 update: 2024-09-03
