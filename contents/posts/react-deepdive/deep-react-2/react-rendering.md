@@ -114,3 +114,75 @@ function Hello() {
 
 - 특정 컴포넌트 렌더링 작업이 무거워 상대적으로 빠르게 보여줄 수 있는거라도 변경해서 보여줄 수 있다면?
 - **의도된 우선순위로 렌더링해 최적화할 수 있는 비동기 렌더링**(동시성 렌더링, 리액트18 도입)
+
+### 5. 메모이제이션
+
+---
+
+**memo를 일단 그냥 다 적용하는 방법 주로 채택**
+
+- 단점: CPU, 메모리를 사용해 이전 렌더링 결과물을 저장해둬야 함
+- 하지만 어차피 리액트는 재조정 알고리즘이기에 이전 결과물은 어떻게든 저장해두고 있음.
+- 결국 props에 대한 얕은 비교가 발생하는게 다임.
+
+**memo를 하지 않았을 때의 문제가 더 크다**
+
+- 렌더링을 함으로써 생기는 비용
+- 컴포넌트 내부의 복잡한 로직 재실행
+- 위 두 가지 모두가 모든 자식 컴포넌트에서 반복해서 일어남
+
+**useMemo, useCallback**
+
+```cs
+function useMath(number: number) {
+  const [double, setDouble] = useState(0)
+  const [triple, setTriple] = useState(0)
+
+  useEffect(() => {
+    setDouble(number * 2)
+    setTriple(number * 3)
+  }, [number])
+
+  return { double, triple }
+}
+
+export default function App() {
+  const [counter, setCounter] = useState(0)
+  const value = useMath(10)
+
+  useEffect(() => {
+    console.log(value.double, value.triple)
+  }, [value])
+
+  function handleClick() {
+    setCounter((prev) => prev + 1)
+  }
+
+  return (
+    <>
+      <h1>{counter}</h1>
+      <button onClick={handleClick}>+</button>
+    </>
+  )
+}
+```
+
+- handleClick으로 강제로 렌더링을 일으키면 value값이 실제로 변하지 않아도 계속해서 console.log가 출력된다.
+- 함수 컴포넌트인 App이 호출되면서 useMath가 계속해서 호출되고, 객체 내부의 값 같지만 참조가 변경되기 때문
+
+```cs
+function useMath(number: number) {
+  const [double, setDouble] = useState(0)
+  const [triple, setTriple] = useState(0)
+
+  useEffect(() => {
+    setDouble(number * 2)
+    setTriple(number * 3)
+  }, [number])
+
+  return useMemo(() => ({ double, triple }), [double, triple])
+}
+```
+
+- 따라서 useMath에 메모이제이션을 하면 컴포넌트 자신의 리렌더링 뿐만 아니라
+- 이를 사용하는 쪽에서도 변하지 않는 고정값을 사용할 수 있음
