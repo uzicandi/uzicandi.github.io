@@ -1,5 +1,5 @@
 ---
-title: "4. 서버 사이드 렌더링"
+title: "4-1. 서버 사이드 렌더링"
 description:
 date: 2024-09-05
 update: 2024-09-05
