@@ -8,6 +8,87 @@ tags:
 series: "NextJS"
 ---
 
+NextJS는 SSR 프레임워크이지만, SSR만을 위해서 사용하는 것은 아니다.
+기본적으로 리액트 프레임워크이기 때문에 라우터, 빌드, 설정을 쉽게 할 수 있기 때문에 사용한다.
+
+- Next.js에서는 처음만 SSR이고 이후에는 index.json 파일로 가져온다
+  `_next/data/~index.json`
+- SSR로 가져오고 이후에는 CSR로 동작한다.
+
+### Hydration
+
+- React에서 SSR을 하게 되면 html와 react component를 연결하는 작업
+- 서버에서 그렸을 때, 클라이언트에서 그렸을 때 = hydration mismatch
+  - window가 있는지 없는지로 분리하는 경우에 주로 발생
+  - 서버에서 안그리도록 만드는 경우로 해결하기도
+  - dynamic으로 해서 NoSSR로 함
+
+### SSR, SSG의 차이
+
+- index.html을 만들어주는데 시점이 다름
+- SSR: 요청마다 (유저 정보에 따라 다르게 보여줘야 하는 경우에 유용)
+  - `next start`
+- SSG: 빌드시점마다 만듦 (동적으로 하진 못함. 정적사이트에 유리 - 블로그)
+  - `next export`
+  - 따라서 SSG로 빌드해서 FP+LCP를 개선할 수 있다.
+  - 처음 페이지는 정적콘텐츠로 보여주고 이후에 data fetching 되면 CSR로 사용하도록
+
+### Client-side Rendering (CSR)
+
+- 최소한의 HTML 페이지와 JavaScript를 다운로드한다.
+- 자바스크립트는 DOM을 업데이트 하고 페이지를 렌더한다.
+- 애플리케이션이 처음 로드되면, full page를 보여주기 전에 약간의 딜레이가 있다. 이는 자바스크립트가 완전히 다운로드되고, 파싱되고, 실행되기 전이기 때문이다.
+
+- 페이지가 처음 로드되면, 다른 페이지로 navigate하는데 빠르다. full page를 새로고침하지 않고 리렌더하여 필요한 데이터만 fetch하기 때문이다.
+
+```cs
+import React, { useState, useEffect } from 'react'
+
+export function Page() {
+  const [data, setData] = useState(null)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch('https://api.example.com/data')
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      const result = await response.json()
+      setData(result)
+    }
+
+    fetchData().catch((e) => {
+      // handle the error as needed
+      console.error('An error occurred while fetching the data: ', e)
+    })
+  }, [])
+
+  return <p>{data ? `Your data: ${data}` : 'Loading...'}</p>
+  // Loading... 이후에 데이터가 페치되면 리렌더해서 보여준다.
+}
+```
+
+- data-fetching 퍼포먼스, 캐싱, Optimistic updates를 위해 SWR을 추천한다.
+
+```cs
+import useSWR from 'swr'
+
+export function Page() {
+  const { data, error, isLoading } = useSWR(
+    'https://api.example.com/data',
+    fetcher
+  )
+
+  if (error) return <p>Failed to load.</p>
+  if (isLoading) return <p>Loading...</p>
+
+  return <p>Your Data: {data}</p>
+}
+```
+
+- SEO에 좋지 않다. 검색 엔진 크롤러는 자바스크립트를 실행하지 않아 초기의 비어있거나 로드 중인 상태만 볼 수 있다.
+- 또한 인터넷 연결이나 기기가 느린 사용자는 모든 Javascript가 로드되어 실행되어야 페이지를 볼 수 있으므로 성능 이슈를 겪을 수 있다.
+
 ### Server-side Rendering (SSR)
 
 - SSR 혹은 Dynamic Rendering
@@ -106,62 +187,6 @@ export async function getStaticProps() {
 
 에 도움이 된다.
 
-### Client-side Rendering (CSR)
-
-- 최소한의 HTML 페이지와 JavaScript를 다운로드한다.
-- 자바스크립트는 DOM을 업데이트 하고 페이지를 렌더한다.
-- 애플리케이션이 처음 로드되면, full page를 보여주기 전에 약간의 딜레이가 있다. 이는 자바스크립트가 완전히 다운로드되고, 파싱되고, 실행되기 전이기 때문이다.
-
-- 페이지가 처음 로드되면, 다른 페이지로 navigate하는데 빠르다. full page를 새로고침하지 않고 리렌더하여 필요한 데이터만 fetch하기 때문이다.
-
-```cs
-import React, { useState, useEffect } from 'react'
-
-export function Page() {
-  const [data, setData] = useState(null)
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await fetch('https://api.example.com/data')
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
-      }
-      const result = await response.json()
-      setData(result)
-    }
-
-    fetchData().catch((e) => {
-      // handle the error as needed
-      console.error('An error occurred while fetching the data: ', e)
-    })
-  }, [])
-
-  return <p>{data ? `Your data: ${data}` : 'Loading...'}</p>
-  // Loading... 이후에 데이터가 페치되면 리렌더해서 보여준다.
-}
-```
-
-- data-fetching 퍼포먼스, 캐싱, Optimistic updates를 위해 SWR을 추천한다.
-
-```cs
-import useSWR from 'swr'
-
-export function Page() {
-  const { data, error, isLoading } = useSWR(
-    'https://api.example.com/data',
-    fetcher
-  )
-
-  if (error) return <p>Failed to load.</p>
-  if (isLoading) return <p>Loading...</p>
-
-  return <p>Your Data: {data}</p>
-}
-```
-
-- SEO에 좋지 않다. 검색 엔진 크롤러는 자바스크립트를 실행하지 않아 초기의 비어있거나 로드 중인 상태만 볼 수 있다.
-- 또한 인터넷 연결이나 기기가 느린 사용자는 모든 Javascript가 로드되어 실행되어야 페이지를 볼 수 있으므로 성능 이슈를 겪을 수 있다.
-
 ### Incremental Static Regeneration (ISR)
 
 - 정적으로 생성된 페이지를 주기적으로 또는 필요에 따라 재생성하는 방식
@@ -178,7 +203,7 @@ export function Page() {
 - SSG의 빠른 성능과 SSR의 데이터 최신성을 모두 제공
 - 서버 부하 감소 (SSR에 비해)
 - 대규모 사이트에서도 정적 생성의 이점을 누릴 수 있음
-- 콘텐츠 업데이트가 자주 일어나는 사이트에 적합
+- 콘텐츠 업데이트가 자주 일어나는 사이트에 적합 (ex. 뉴스기사 업데이트)
 
 #### 단점
 
