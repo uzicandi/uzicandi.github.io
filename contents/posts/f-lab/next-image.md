@@ -1,5 +1,5 @@
 ---
-title: "Next Image의 동작원리"
+title: "Next/image의 기능과 동작원리"
 description:
 date: 2024-10-09
 update: 2024-10-09
